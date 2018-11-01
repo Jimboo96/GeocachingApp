@@ -29,8 +29,6 @@ import kotlin.jvm.functions.Function1;
 public class GameActivity extends Activity {
 
     private ProximityObserver proximityObserver;
-    private final String appId = "my-app-2vi";
-    private final String appToken = "8d4cf42cfb254f328f55eeaf051f8b90";
     private TextView textView;
     private String hotnessLVL = "COLD";
 
@@ -47,6 +45,9 @@ public class GameActivity extends Activity {
                 checkHotness();
             }
         });
+
+        String appId = "my-app-2vi";
+        String appToken = "8d4cf42cfb254f328f55eeaf051f8b90";
 
         EstimoteCloudCredentials cloudCredentials =
                 new EstimoteCloudCredentials( appId,appToken);
