@@ -8,6 +8,8 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 public class PreGameActivity extends ListActivity {
+    private String cacheChoice;
+
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         String[] values = new String[] { "Treasure 1", "Treasure 2", "Treasure 3", "Treasure 4" };
@@ -18,7 +20,8 @@ public class PreGameActivity extends ListActivity {
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
         String item = (String) getListAdapter().getItem(position);
-        Toast.makeText(this, item + " selected", Toast.LENGTH_LONG).show();
+        cacheChoice = item;
+        Toast.makeText(this, cacheChoice + " selected", Toast.LENGTH_LONG).show();
         Intent intent = new Intent(this, GameActivity.class);
         startActivity(intent);
     }
