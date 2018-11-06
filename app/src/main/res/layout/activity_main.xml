@@ -5,31 +5,58 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:gravity="center_horizontal">
 
     <ImageView
         android:gravity="center_horizontal"
         android:id="@+id/imageView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:srcCompat="@drawable/placeholder"
-        android:layout_marginBottom="40dp"
-        android:layout_marginTop="40dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginLeft="20dp"/>
+        android:layout_marginTop="100dp"
+        app:srcCompat="@drawable/placeholder" />
 
-    <Button
-        android:layout_gravity="center"
-        android:id="@+id/playButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="PLAY" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:gravity="center">
 
-    <Button
-        android:layout_gravity="center"
-        android:id="@+id/settingsButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="SETTINGS" />
+        <Button
+            android:id="@+id/playButton"
+            android:layout_width="82dp"
+            android:layout_height="82dp"
+            android:layout_marginLeft="15dp"
+            android:background="@drawable/circle"
+            android:drawableTop="@drawable/sharp_play_circle_filled_black_48"
+            android:paddingTop="5dp"
+            android:paddingBottom="15dp"
+            android:text="PLAY"
+            android:textSize="11sp"/>
 
+        <Button
+            android:id="@+id/mapButton"
+            android:layout_width="82dp"
+            android:layout_height="82dp"
+            android:layout_marginLeft="15dp"
+            android:background="@drawable/circle"
+            android:drawableTop="@drawable/sharp_explore_black_48"
+            android:paddingTop="5dp"
+            android:paddingBottom="15dp"
+            android:text="MAP"
+            android:textSize="11sp"/>
+
+        <Button
+            android:id="@+id/settingsButton"
+            android:layout_width="82dp"
+            android:layout_height="82dp"
+            android:layout_marginLeft="15dp"
+            android:background="@drawable/circle"
+            android:drawableTop="@drawable/sharp_settings_black_48"
+            android:paddingTop="5dp"
+            android:paddingBottom="15dp"
+            android:text="Settings"
+            android:textSize="11sp"/>
+
+    </LinearLayout>
 </LinearLayout>
