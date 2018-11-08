@@ -3,6 +3,7 @@ package geocaching.app;
 import android.content.Intent;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -13,16 +14,20 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
-
-    private GoogleMap mMap;
-    int indexOfSelectedCache = 0;
+    private int ID = 0;
+    private double longitude = 0;
+    private double latitude = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
 
-        indexOfSelectedCache = getIntent().getIntExtra("treasureNum", 0) + 1;
+        ID = getIntent().getIntExtra("id",0);
+        ID += 1; // Just making it more clear from users POV to start from 1 and not 0.
+        longitude = getIntent().getDoubleExtra("longitude",0);
+        latitude = getIntent().getDoubleExtra("latitude",0);
+        Toast.makeText(this, "id: " + ID + " long: " + longitude + " lat: " + latitude, Toast.LENGTH_LONG).show();
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -42,22 +47,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      */
     @Override
     public void onMapReady(GoogleMap googleMap) {
+        GoogleMap mMap;
         mMap = googleMap;
 
-        // Add markers and move the camera
-        /*ArrayList<LatLng> coordinatesArray = new ArrayList<>();
-        coordinatesArray.add(new LatLng(64.999970, 25.510664));
-        coordinatesArray.add(new LatLng(64.996075, 25.501013));
-
-        for(LatLng latLng : coordinatesArray) {
-            index++;
-            treasureMarker = mMap.addMarker(new MarkerOptions().position(latLng).title("Treasure " + index).snippet("Directional location of treasure cache " + indexOfSelectedCache + 1));
-            treasureMarker.showInfoWindow();
-        }
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(coordinatesArray.get(indexOfSelectedCache)));*/
-
-        LatLng cacheCoordinates = new LatLng(64.999970, 25.510664);
-        Marker treasureMarker = mMap.addMarker(new MarkerOptions().position(cacheCoordinates).title("Treasure " + indexOfSelectedCache).snippet("Directional location of treasure cache " + indexOfSelectedCache));
+        LatLng cacheCoordinates = new LatLng(latitude, longitude);
+        Marker treasureMarker = mMap.addMarker(new MarkerOptions().position(cacheCoordinates).title("Treasure " + ID).snippet("Directional location of treasure cache " + ID));
         treasureMarker.showInfoWindow();
         mMap.moveCamera(CameraUpdateFactory.newLatLng(cacheCoordinates));
     }

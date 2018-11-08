@@ -11,9 +11,10 @@
     <ImageView
         android:gravity="center_horizontal"
         android:id="@+id/imageView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="100dp"
+        android:layout_width="@dimen/logo_size"
+        android:layout_height="@dimen/logo_size"
+        android:layout_marginBottom="@dimen/logo_margin"
+        android:layout_marginTop="@dimen/logo_margin"
         app:srcCompat="@drawable/placeholder" />
 
     <LinearLayout
@@ -24,39 +25,39 @@
 
         <Button
             android:id="@+id/playButton"
-            android:layout_width="82dp"
-            android:layout_height="82dp"
-            android:layout_marginLeft="15dp"
+            android:layout_width="@dimen/custom_button_size"
+            android:layout_height="@dimen/custom_button_size"
+            android:layout_marginLeft="@dimen/custom_button_margin"
             android:background="@drawable/circle"
             android:drawableTop="@drawable/sharp_play_circle_filled_black_48"
-            android:paddingTop="5dp"
-            android:paddingBottom="15dp"
-            android:text="PLAY"
-            android:textSize="11sp"/>
+            android:paddingTop="@dimen/custom_button_small_padding"
+            android:paddingBottom="@dimen/custom_button_big_padding"
+            android:text="@string/play_button_text"
+            android:textSize="@dimen/button_text_size"/>
 
         <Button
             android:id="@+id/mapButton"
-            android:layout_width="82dp"
-            android:layout_height="82dp"
-            android:layout_marginLeft="15dp"
+            android:layout_width="@dimen/custom_button_size"
+            android:layout_height="@dimen/custom_button_size"
+            android:layout_marginLeft="@dimen/custom_button_margin"
             android:background="@drawable/circle"
             android:drawableTop="@drawable/sharp_explore_black_48"
-            android:paddingTop="5dp"
-            android:paddingBottom="15dp"
-            android:text="MAP"
-            android:textSize="11sp"/>
+            android:paddingTop="@dimen/custom_button_small_padding"
+            android:paddingBottom="@dimen/custom_button_big_padding"
+            android:text="@string/map_button_text"
+            android:textSize="@dimen/button_text_size"/>
 
         <Button
             android:id="@+id/settingsButton"
-            android:layout_width="82dp"
-            android:layout_height="82dp"
-            android:layout_marginLeft="15dp"
+            android:layout_width="@dimen/custom_button_size"
+            android:layout_height="@dimen/custom_button_size"
+            android:layout_marginLeft="@dimen/custom_button_margin"
             android:background="@drawable/circle"
             android:drawableTop="@drawable/sharp_settings_black_48"
-            android:paddingTop="5dp"
-            android:paddingBottom="15dp"
-            android:text="Settings"
-            android:textSize="11sp"/>
+            android:paddingTop="@dimen/custom_button_small_padding"
+            android:paddingBottom="@dimen/custom_button_big_padding"
+            android:text="@string/settings_button_text"
+            android:textSize="@dimen/button_text_size"/>
 
     </LinearLayout>
 </LinearLayout>

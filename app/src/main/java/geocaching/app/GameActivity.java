@@ -145,7 +145,7 @@ public class GameActivity extends Activity {
         int vibrationMs = 100;
 
         if(hotnessLVL == "COLD") {
-            textView.setText("You are in the cold zone.");
+            textView.setText(getResources().getString(R.string.cold_zone_text));
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 v.vibrate(VibrationEffect.createOneShot(vibrationMs / 2, VibrationEffect.DEFAULT_AMPLITUDE));
@@ -154,7 +154,7 @@ public class GameActivity extends Activity {
             }
 
         } else if (hotnessLVL == "WARM") {
-            textView.setText("You are in the warm zone.");
+            textView.setText(getResources().getString(R.string.warm_zone_text));
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 v.vibrate(VibrationEffect.createOneShot(vibrationMs, VibrationEffect.DEFAULT_AMPLITUDE));
@@ -163,7 +163,7 @@ public class GameActivity extends Activity {
             }
 
         } else if (hotnessLVL == "HOT") {
-            textView.setText("You are in the hot zone.");
+            textView.setText(getResources().getString(R.string.hot_zone_text));
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 v.vibrate(VibrationEffect.createOneShot(vibrationMs * 2, VibrationEffect.DEFAULT_AMPLITUDE));
