@@ -14,6 +14,7 @@
 
     <application
         android:allowBackup="true"
+        android:screenOrientation="portrait"
         android:icon="@drawable/sharp_explore_black_48"
         android:label="@string/app_name"
         android:roundIcon="@drawable/sharp_explore_black_48"
@@ -26,9 +27,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".GameActivity" />
+        <activity android:name=".GameActivity"/>
         <activity android:name=".SettingsActivity" />
-        <activity android:name=".PreGameActivity" />
+        <activity android:name=".PreGameActivity"/>
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").

@@ -32,22 +32,15 @@ public class PreGameActivity extends ListActivity {
     protected double longitude = 0;
     protected double latitude = 0;
 
-    protected ArrayList<Integer> idArray;
-    protected ArrayList<Boolean> completedArray;
-    protected ArrayList<Double> longitudeArray;
-    protected ArrayList<Double> latitudeArray;
+    protected ArrayList<Integer> idArray = new ArrayList<>();
+    protected ArrayList<Boolean> completedArray = new ArrayList<>();
+    protected ArrayList<Double> longitudeArray = new ArrayList<>();
+    protected ArrayList<Double> latitudeArray = new ArrayList<>();
     String[] values;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        idArray = new ArrayList<>();
-        completedArray = new ArrayList<>();
-        longitudeArray = new ArrayList<>();
-        latitudeArray = new ArrayList<>();
-
-        final String URL = "http://www.students.oamk.fi/~t6bjji00/json_files/coordinates.json";
-        new JsonTask().execute(URL);
+        new JsonTask().execute("http://www.students.oamk.fi/~t6bjji00/json_files/coordinates.json");
     }
 
     @Override
