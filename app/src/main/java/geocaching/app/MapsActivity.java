@@ -27,7 +27,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         ID += 1; // Just making it more clear from users POV to start from 1 and not 0.
         longitude = getIntent().getDoubleExtra("longitude",0);
         latitude = getIntent().getDoubleExtra("latitude",0);
-        Toast.makeText(this, "id: " + ID + " long: " + longitude + " lat: " + latitude, Toast.LENGTH_LONG).show();
+        //Toast.makeText(this, "id: " + ID + " long: " + longitude + " lat: " + latitude, Toast.LENGTH_LONG).show();
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()

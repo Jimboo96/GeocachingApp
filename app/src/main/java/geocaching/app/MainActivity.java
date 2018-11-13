@@ -9,19 +9,19 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.common.GoogleApiAvailability;
 
 import org.w3c.dom.Text;
-
-import static geocaching.app.SettingsActivity.MY_PREFS_NAME;
 
 public class MainActivity extends AppCompatActivity {
     public static final int SUCCESS = 0;
     public static final int SERVICE_MISSING = 1;
     public static final int SERVICE_VERSION_UPDATE_REQUIRED = 2;
     public static final int SERVICE_DISABLED = 3;
-    public static final String MY_PREFS_NAME = "MyPrefsFile";
+
+    private SharedPrefHelper sharedPrefHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,21 +29,19 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         getSupportActionBar().hide();
 
-        SharedPreferences prefs = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
-        String restoredText = prefs.getString("name", null);
-        if (restoredText != null) {
-            String name = prefs.getString("name", "No name defined");//"No name defined" is the default value.
-            int idName = prefs.getInt("idName", 0); //0 is the default value.
-            TextView debugText = findViewById(R.id.debugText);
-            debugText.setText(name + " " + idName);
-        }
+        sharedPrefHelper = new SharedPrefHelper(this);
 
         Button playButton = findViewById(R.id.playButton);
         playButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, GameActivity.class);
-                startActivity(intent);
+                if(sharedPrefHelper.getCacheSelection() != 0) {
+                    Intent intent = new Intent(MainActivity.this, GameActivity.class);
+                    intent.putExtra("selectedCacheID", sharedPrefHelper.getCacheSelection());
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(MainActivity.this, "Select a treasure cache from MAP first!", Toast.LENGTH_LONG).show();
+                }
             }
         });
 

@@ -25,41 +25,39 @@ import java.util.ArrayList;
 
 public class PreGameActivity extends ListActivity {
     private ProgressDialog pd;
-
     private JSONObject jObject;
-    protected int ID = 0;
-    protected boolean completed = false;
-    protected double longitude = 0;
-    protected double latitude = 0;
 
     protected ArrayList<Integer> idArray = new ArrayList<>();
     protected ArrayList<Boolean> completedArray = new ArrayList<>();
     protected ArrayList<Double> longitudeArray = new ArrayList<>();
     protected ArrayList<Double> latitudeArray = new ArrayList<>();
-    String[] values;
+    protected String[] values;
+
+    private SharedPrefHelper sharedPrefHelper;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        sharedPrefHelper = new SharedPrefHelper(this);
         new JsonTask().execute("http://www.students.oamk.fi/~t6bjji00/json_files/coordinates.json");
     }
 
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
-        //String item = (String) getListAdapter().getItem(position);
-        //parseJSON(position);
-
         Intent intent = new Intent(this, MapsActivity.class);
         intent.putExtra("id",idArray.get(position));
         intent.putExtra("longitude",longitudeArray.get(position));
         intent.putExtra("latitude",latitudeArray.get(position));
 
-        //Toast.makeText(this, "id: " + ID + " completed: " + completed + " long: " + longitude + " lat: " + latitude, Toast.LENGTH_LONG).show();
+        if(sharedPrefHelper.getCacheSelection() != (int) (id+1)) {
+            Toast.makeText(this, "Treasure " + (id+1) + " selected!", Toast.LENGTH_LONG).show();
+            sharedPrefHelper.setCacheSelection((int) id + 1);
+        }
+
         startActivity(intent);
     }
 
     void parseJSON() {
-        JSONObject treasures = null;
-        JSONObject treasure = null;
+        JSONObject treasures, treasure;
         try {
             treasures = jObject.getJSONObject("treasures");
             values  = new String[treasures.length()];
@@ -71,11 +69,6 @@ public class PreGameActivity extends ListActivity {
                 latitudeArray.add(treasure.getDouble("latitude"));
                 values[i] = "Treasure " + (i + 1);
             }
-            //treasure = treasures.getJSONObject("treasure" + position);
-            //ID = treasure.getInt("id");
-            //completed = treasure.getBoolean("completed");
-            //longitude = treasure.getDouble("longitude");
-            //latitude = treasure.getDouble("latitude");
         } catch (JSONException e) {
             e.printStackTrace();
         }

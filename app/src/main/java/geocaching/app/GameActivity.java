@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.estimote.mustard.rx_goodness.rx_requirements_wizard.Requirement;
 import com.estimote.mustard.rx_goodness.rx_requirements_wizard.RequirementsWizardFactory;
@@ -27,16 +28,23 @@ import kotlin.jvm.functions.Function0;
 import kotlin.jvm.functions.Function1;
 
 public class GameActivity extends Activity {
-
     private ProximityObserver proximityObserver;
-    private TextView textView;
+    private TextView infoText;
     private String hotnessLVL = "COLD";
+    private final double HOT_ZONE_AREA = 2.0;
+    private final double WARM_ZONE_AREA = 8.0;
+    private int cacheID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
-        textView = findViewById(R.id.textView);
+
+        TextView cacheIDText = findViewById(R.id.cacheID);
+        infoText = findViewById(R.id.textView);
+
+        cacheID = getIntent().getIntExtra("selectedCacheID",0);
+        cacheIDText.append(" " + cacheID + ".");
 
         Button button = findViewById(R.id.button);
         button.setOnClickListener(new View.OnClickListener() {
@@ -46,11 +54,8 @@ public class GameActivity extends Activity {
             }
         });
 
-        String appId = "my-app-2vi";
-        String appToken = "8d4cf42cfb254f328f55eeaf051f8b90";
-
         EstimoteCloudCredentials cloudCredentials =
-                new EstimoteCloudCredentials( appId,appToken);
+                new EstimoteCloudCredentials( "my-app-2vi","8d4cf42cfb254f328f55eeaf051f8b90");
 
         this.proximityObserver =
                 new ProximityObserverBuilder(getApplicationContext(), cloudCredentials)
@@ -94,7 +99,7 @@ public class GameActivity extends Activity {
 
     ProximityZone warmZone = new ProximityZoneBuilder()
             .forTag("treasure")
-            .inCustomRange(8.0)
+            .inCustomRange(WARM_ZONE_AREA)
             .onEnter(new Function1<ProximityZoneContext, Unit>() {
                 @Override
                 public Unit invoke(ProximityZoneContext context) {
@@ -118,14 +123,19 @@ public class GameActivity extends Activity {
 
     ProximityZone hotZone = new ProximityZoneBuilder()
             .forTag("treasure")
-            .inCustomRange(2.0)
+            .inCustomRange(HOT_ZONE_AREA)
             .onEnter(new Function1<ProximityZoneContext, Unit>() {
                 @Override
                 public Unit invoke(ProximityZoneContext context) {
                     String treasureNum = context.getAttachments().get("treasure");
-                    //textView.setText("You are in the hot zone of treasure " + treasureNum);
-                    hotnessLVL = "HOT";
-                    Log.d("app", "You are in the hot zone of treasure " + treasureNum);
+                    if(treasureNum.equals(String.valueOf(cacheID))) {
+                        Toast.makeText(GameActivity.this, "yes it works", Toast.LENGTH_LONG).show();
+                        //textView.setText("You are in the hot zone of treasure " + treasureNum);
+                        hotnessLVL = "HOT";
+                        Log.d("app", "You are in the hot zone of treasure " + treasureNum);
+                    } else {
+                        Toast.makeText(GameActivity.this, "no no, it doesnt work", Toast.LENGTH_LONG).show();
+                    }
                     return null;
                 }
             })
@@ -145,7 +155,7 @@ public class GameActivity extends Activity {
         int vibrationMs = 100;
 
         if(hotnessLVL == "COLD") {
-            textView.setText(getResources().getString(R.string.cold_zone_text));
+            infoText.setText(getResources().getString(R.string.cold_zone_text));
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 v.vibrate(VibrationEffect.createOneShot(vibrationMs / 2, VibrationEffect.DEFAULT_AMPLITUDE));
@@ -154,7 +164,7 @@ public class GameActivity extends Activity {
             }
 
         } else if (hotnessLVL == "WARM") {
-            textView.setText(getResources().getString(R.string.warm_zone_text));
+            infoText.setText(getResources().getString(R.string.warm_zone_text));
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 v.vibrate(VibrationEffect.createOneShot(vibrationMs, VibrationEffect.DEFAULT_AMPLITUDE));
@@ -163,7 +173,7 @@ public class GameActivity extends Activity {
             }
 
         } else if (hotnessLVL == "HOT") {
-            textView.setText(getResources().getString(R.string.hot_zone_text));
+            infoText.setText(getResources().getString(R.string.hot_zone_text));
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 v.vibrate(VibrationEffect.createOneShot(vibrationMs * 2, VibrationEffect.DEFAULT_AMPLITUDE));
