@@ -113,7 +113,6 @@ public class GameActivity extends Activity {
             .onExit(new Function1<ProximityZoneContext, Unit>() {
                 @Override
                 public Unit invoke(ProximityZoneContext context) {
-                    //textView.setText("Exited warm zone");
                     hotnessLVL = "COLD";
                     Log.d("app", "Exited warm zone!");
                     return null;
@@ -128,21 +127,18 @@ public class GameActivity extends Activity {
                 @Override
                 public Unit invoke(ProximityZoneContext context) {
                     String treasureNum = context.getAttachments().get("treasure");
-                    if(treasureNum.equals(String.valueOf(cacheID))) {
+                    //if(treasureNum.equals(String.valueOf(cacheID))) {
                         Toast.makeText(GameActivity.this, "yes it works", Toast.LENGTH_LONG).show();
                         //textView.setText("You are in the hot zone of treasure " + treasureNum);
                         hotnessLVL = "HOT";
                         Log.d("app", "You are in the hot zone of treasure " + treasureNum);
-                    } else {
-                        Toast.makeText(GameActivity.this, "no no, it doesnt work", Toast.LENGTH_LONG).show();
-                    }
+                    //}
                     return null;
                 }
             })
             .onExit(new Function1<ProximityZoneContext, Unit>() {
                 @Override
                 public Unit invoke(ProximityZoneContext context) {
-                    //textView.setText("Exited hot zone");
                     hotnessLVL = "WARM";
                     Log.d("app", "Exited hot zone!");
                     return null;
