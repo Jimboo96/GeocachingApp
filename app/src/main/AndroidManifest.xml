@@ -37,6 +37,19 @@
         <activity
             android:name=".PreGameActivity"
             android:screenOrientation="portrait"/>
+        <activity
+            android:name=".CacheFoundActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.nfc.action.NDEF_DISCOVERED" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data
+                    android:host="ext"
+                    android:pathPrefix="/estimote.com:id"
+                    android:scheme="vnd.android.nfc" />
+            </intent-filter>
+        </activity>
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
