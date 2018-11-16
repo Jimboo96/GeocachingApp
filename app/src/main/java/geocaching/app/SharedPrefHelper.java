@@ -58,4 +58,43 @@ class SharedPrefHelper {
     int getCacheSelection() {
         return sharedPreferences.getInt(context.getString(R.string.shared_pref_cache_selection), 0);
     }
+
+    void setCache1Found() {
+        sharedPreferences.edit().putBoolean(context.getString(R.string.shared_pref_cache_1_state), true).apply();
+    }
+
+    boolean getCache1State() {
+        return sharedPreferences.getBoolean(context.getString(R.string.shared_pref_cache_1_state), false);
+    }
+
+    void setCache2Found() {
+        sharedPreferences.edit().putBoolean(context.getString(R.string.shared_pref_cache_2_state), true).apply();
+    }
+
+    boolean getCache2State() {
+        return sharedPreferences.getBoolean(context.getString(R.string.shared_pref_cache_2_state), false);
+    }
+
+    void setCache3Found() {
+        sharedPreferences.edit().putBoolean(context.getString(R.string.shared_pref_cache_3_state), true).apply();
+    }
+
+    boolean getCache3State() {
+        return sharedPreferences.getBoolean(context.getString(R.string.shared_pref_cache_3_state), false);
+    }
+
+    void setCache4Found() {
+        sharedPreferences.edit().putBoolean(context.getString(R.string.shared_pref_cache_4_state), true).apply();
+    }
+
+    boolean getCache4State() {
+        return sharedPreferences.getBoolean(context.getString(R.string.shared_pref_cache_4_state), false);
+    }
+
+    void resetCaches() {
+        sharedPreferences.edit().putBoolean(context.getString(R.string.shared_pref_cache_1_state), false).apply();
+        sharedPreferences.edit().putBoolean(context.getString(R.string.shared_pref_cache_2_state), false).apply();
+        sharedPreferences.edit().putBoolean(context.getString(R.string.shared_pref_cache_3_state), false).apply();
+        sharedPreferences.edit().putBoolean(context.getString(R.string.shared_pref_cache_4_state), false).apply();
+    }
 }

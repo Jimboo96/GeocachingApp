@@ -23,4 +23,9 @@
     <string name="shared_pref_setting2">SharedPrefsLimiterSetting</string>
     <string name="shared_pref_setting3">SharedPrefsThirdSetting></string>
     <string name="shared_pref_cache_selection">SharedPrefsCacheSelection></string>
+
+    <string name="shared_pref_cache_1_state">SharedPrefsCache1State></string>
+    <string name="shared_pref_cache_2_state">SharedPrefsCache2State></string>
+    <string name="shared_pref_cache_3_state">SharedPrefsCache3State></string>
+    <string name="shared_pref_cache_4_state">SharedPrefsCache4State></string>
 </resources>

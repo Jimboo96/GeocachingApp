@@ -17,10 +17,13 @@ public class ArrayListAdapter extends ArrayAdapter<String> {
     private final Context context;
     private final String[] values;
 
+    private SharedPrefHelper sharedPrefHelper;
+
     public ArrayListAdapter(Context context, String[] values) {
         super(context, R.layout.activity_pre_game, values);
         this.context = context;
         this.values = values;
+        sharedPrefHelper = new SharedPrefHelper(context);
     }
 
     @Override
@@ -35,13 +38,17 @@ public class ArrayListAdapter extends ArrayAdapter<String> {
 
         //TODO get completed state from PreGameActivity
         String s = values[position];
-        if (s.startsWith("Treasure 1") || s.startsWith("Treasure 2")) {
+        if((sharedPrefHelper.getCache1State() && s.startsWith("Treasure 1")) ||
+                (sharedPrefHelper.getCache2State() && s.startsWith("Treasure 2")) ||
+                (sharedPrefHelper.getCache3State() && s.startsWith("Treasure 3")) ||
+                (sharedPrefHelper.getCache4State() && s.startsWith("Treasure 4")) ) {
             imageView.setImageResource(R.drawable.sharp_done_outline_black_24);
             secondLine.setText(values[position] + " has been found!");
-        } else {
+        }else {
             imageView.setImageResource(R.drawable.round_cancel_black_24);
             secondLine.setText(values[position] + " hasn't been found yet!");
         }
+
 
         return rowView;
     }

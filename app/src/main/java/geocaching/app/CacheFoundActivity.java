@@ -19,6 +19,8 @@ public class CacheFoundActivity extends Activity {
         TextView textView = findViewById(R.id.textView);
         textView.append(" " + sharedPrefHelper.getCacheSelection() + "!");
 
+        setCacheState();
+
         Button okButton = findViewById(R.id.button);
         okButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -35,4 +37,16 @@ public class CacheFoundActivity extends Activity {
         super.onResume();
     }
 
+    protected void setCacheState() {
+        switch(sharedPrefHelper.getCacheSelection()) {
+            case 1: sharedPrefHelper.setCache1Found();
+                break;
+            case 2: sharedPrefHelper.setCache2Found();
+                break;
+            case 3: sharedPrefHelper.setCache3Found();
+                break;
+            case 4: sharedPrefHelper.setCache4Found();
+                break;
+        }
+    }
 }

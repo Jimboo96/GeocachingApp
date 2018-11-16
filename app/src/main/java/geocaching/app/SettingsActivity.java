@@ -39,7 +39,7 @@ public class SettingsActivity extends Activity {
         resetProgressButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO: Reset found cache states.
+                sharedPrefHelper.resetCaches();
                 sharedPrefHelper.setCacheSelection(0);
                 Toast.makeText(SettingsActivity.this, "Progress reseted.", Toast.LENGTH_SHORT).show();
             }
