@@ -1,13 +1,13 @@
 package geocaching.app;
 
+import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -23,7 +23,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 
-public class PreGameActivity extends ListActivity {
+public class CacheListActivity extends ListActivity {
     private ProgressDialog pd;
     private JSONObject jObject;
 
@@ -42,18 +42,52 @@ public class PreGameActivity extends ListActivity {
     }
 
     @Override
-    protected void onListItemClick(ListView l, View v, int position, long id) {
-        Intent intent = new Intent(this, MapsActivity.class);
-        intent.putExtra("id",idArray.get(position));
-        intent.putExtra("longitude",longitudeArray.get(position));
-        intent.putExtra("latitude",latitudeArray.get(position));
-
-        if(sharedPrefHelper.getCacheSelection() != (int) (id+1)) {
-            Toast.makeText(this, "Treasure " + (id+1) + " selected!", Toast.LENGTH_LONG).show();
+    protected void onListItemClick(ListView l, View v, final int position, final long id) {
+        if(sharedPrefHelper.getCacheSelection() == 0) {
             sharedPrefHelper.setCacheSelection((int) id + 1);
+            Toast.makeText(CacheListActivity.this, "Treasure " + (id+1) + " selected!", Toast.LENGTH_LONG).show();
+            Intent intent = new Intent(CacheListActivity.this, MapsActivity.class);
+            intent.putExtra("id",idArray.get(position));
+            intent.putExtra("longitude",longitudeArray.get(position));
+            intent.putExtra("latitude",latitudeArray.get(position));
+            startActivity(intent);
         }
-
-        startActivity(intent);
+        else if(sharedPrefHelper.getCacheSelection() != (int) (id+1)) {
+            final DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    switch (which) {
+                        case DialogInterface.BUTTON_POSITIVE: {
+                            break;
+                        }
+                        case DialogInterface.BUTTON_NEGATIVE: {
+                            sharedPrefHelper.setCacheSelection((int) id + 1);
+                            Toast.makeText(CacheListActivity.this, "Treasure " + (id+1) + " selected!", Toast.LENGTH_LONG).show();
+                            Intent intent = new Intent(CacheListActivity.this, MapsActivity.class);
+                            intent.putExtra("id",idArray.get(position));
+                            intent.putExtra("longitude",longitudeArray.get(position));
+                            intent.putExtra("latitude",latitudeArray.get(position));
+                            startActivity(intent);
+                            break;
+                        }
+                    }
+                }};
+            runOnUiThread(
+                    new Runnable() {
+                        @Override
+                        public void run() {
+                            AlertDialog.Builder builder = new AlertDialog.Builder(CacheListActivity.this);
+                            builder.setMessage("Are you sure you want to start searching for a different cache?").setNegativeButton("YES", dialogClickListener).setPositiveButton("NO", dialogClickListener).show();
+                        }
+                    }
+            );
+        } else {
+            Intent intent = new Intent(CacheListActivity.this, MapsActivity.class);
+            intent.putExtra("id",idArray.get(position));
+            intent.putExtra("longitude",longitudeArray.get(position));
+            intent.putExtra("latitude",latitudeArray.get(position));
+            startActivity(intent);
+        }
     }
 
     void parseJSON() {
@@ -83,7 +117,7 @@ public class PreGameActivity extends ListActivity {
         protected void onPreExecute() {
             super.onPreExecute();
 
-            pd = new ProgressDialog(PreGameActivity.this);
+            pd = new ProgressDialog(CacheListActivity.this);
             pd.setMessage("Loading cache locations...");
             pd.setCancelable(false);
             pd.show();
@@ -141,7 +175,7 @@ public class PreGameActivity extends ListActivity {
             try {
                 jObject = new JSONObject(result);
                 parseJSON();
-                ArrayListAdapter adapter = new ArrayListAdapter(PreGameActivity.this, values);
+                ArrayListAdapter adapter = new ArrayListAdapter(CacheListActivity.this, values);
                 setListAdapter(adapter);
             } catch (JSONException e) {
                 e.printStackTrace();

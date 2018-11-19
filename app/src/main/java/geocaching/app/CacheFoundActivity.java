@@ -48,5 +48,6 @@ public class CacheFoundActivity extends Activity {
             case 4: sharedPrefHelper.setCache4Found();
                 break;
         }
+        sharedPrefHelper.setCacheSelection(0);
     }
 }

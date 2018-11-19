@@ -35,7 +35,7 @@
             android:name=".SettingsActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".PreGameActivity"
+            android:name=".CacheListActivity"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".CacheFoundActivity"

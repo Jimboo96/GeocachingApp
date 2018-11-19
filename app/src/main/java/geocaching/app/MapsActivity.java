@@ -1,8 +1,11 @@
 package geocaching.app;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -54,5 +57,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Marker treasureMarker = mMap.addMarker(new MarkerOptions().position(cacheCoordinates).title("Treasure " + ID).snippet("Directional location of treasure cache " + ID));
         treasureMarker.showInfoWindow();
         mMap.moveCamera(CameraUpdateFactory.newLatLng(cacheCoordinates));
+    }
+
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if(keyCode == KeyEvent.KEYCODE_BACK) {
+            Intent i = new Intent(MapsActivity.this, MainActivity.class);
+            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(i);
+            return false;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 }

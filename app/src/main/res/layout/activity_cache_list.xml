@@ -34,4 +34,14 @@
         android:gravity="center_vertical"
         android:text="@string/placeholder_text"
         android:textSize="@dimen/header_text_size"/>
+
+    <ImageView
+        android:id="@+id/selectionIcon"
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="6dp"
+        android:src="@drawable/common_google_signin_btn_icon_light_normal" />
 </RelativeLayout>

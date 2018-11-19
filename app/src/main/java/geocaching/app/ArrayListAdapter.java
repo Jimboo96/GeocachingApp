@@ -1,16 +1,12 @@
 package geocaching.app;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class ArrayListAdapter extends ArrayAdapter<String> {
 
@@ -20,7 +16,7 @@ public class ArrayListAdapter extends ArrayAdapter<String> {
     private SharedPrefHelper sharedPrefHelper;
 
     public ArrayListAdapter(Context context, String[] values) {
-        super(context, R.layout.activity_pre_game, values);
+        super(context, R.layout.activity_cache_list, values);
         this.context = context;
         this.values = values;
         sharedPrefHelper = new SharedPrefHelper(context);
@@ -30,14 +26,21 @@ public class ArrayListAdapter extends ArrayAdapter<String> {
     public View getView(int position, View convertView, ViewGroup parent) {
         LayoutInflater inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View rowView = inflater.inflate(R.layout.activity_pre_game, parent, false);
+        View rowView = inflater.inflate(R.layout.activity_cache_list, parent, false);
         final TextView firstLine = (TextView) rowView.findViewById(R.id.firstLine);
         final TextView secondLine = rowView.findViewById(R.id.secondLine);
         ImageView imageView = (ImageView) rowView.findViewById(R.id.icon);
+        ImageView selectionIconView = rowView.findViewById(R.id.selectionIcon);
         firstLine.setText(values[position]);
 
-        //TODO get completed state from PreGameActivity
         String s = values[position];
+
+        if(("Treasure " + sharedPrefHelper.getCacheSelection()).equals(s)) {
+            selectionIconView.setImageResource(R.drawable.baseline_flag_black_24);
+        } else {
+            selectionIconView.setVisibility(View.GONE);
+        }
+
         if((sharedPrefHelper.getCache1State() && s.startsWith("Treasure 1")) ||
                 (sharedPrefHelper.getCache2State() && s.startsWith("Treasure 2")) ||
                 (sharedPrefHelper.getCache3State() && s.startsWith("Treasure 3")) ||
@@ -48,7 +51,6 @@ public class ArrayListAdapter extends ArrayAdapter<String> {
             imageView.setImageResource(R.drawable.round_cancel_black_24);
             secondLine.setText(values[position] + " hasn't been found yet!");
         }
-
 
         return rowView;
     }
@@ -65,7 +67,7 @@ public class ArrayListAdapter extends ArrayAdapter<String> {
     }
 
     public ArrayListAdapter(Activity context, String[] names) {
-        super(context, R.layout.activity_pre_game, names);
+        super(context, R.layout.activity_cache_list, names);
         this.context = context;
         this.names = names;
     }
@@ -76,7 +78,7 @@ public class ArrayListAdapter extends ArrayAdapter<String> {
         // reuse views
         if (rowView == null) {
             LayoutInflater inflater = context.getLayoutInflater();
-            rowView = inflater.inflate(R.layout.activity_pre_game, null);
+            rowView = inflater.inflate(R.layout.activity_cache_list, null);
             // configure view holder
             ViewHolder viewHolder = new ViewHolder();
             viewHolder.text = (TextView) rowView.findViewById(R.id.firstLine);

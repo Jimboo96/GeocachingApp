@@ -3,6 +3,7 @@
     <string name="title_activity_maps">Map</string>
     <string name="check_info_text">Check if you are near a beacon!</string>
     <string name="cache_ID_text">You are looking for treasure </string>
+    <string name="tries_left_text">Number of tries left:  </string>
     <string name="check_button_text">CHECK</string>
     <string name="play_button_text">PLAY</string>
     <string name="map_button_text">MAP</string>
