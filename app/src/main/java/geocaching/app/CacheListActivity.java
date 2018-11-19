@@ -46,11 +46,7 @@ public class CacheListActivity extends ListActivity {
         if(sharedPrefHelper.getCacheSelection() == 0) {
             sharedPrefHelper.setCacheSelection((int) id + 1);
             Toast.makeText(CacheListActivity.this, "Treasure " + (id+1) + " selected!", Toast.LENGTH_LONG).show();
-            Intent intent = new Intent(CacheListActivity.this, MapsActivity.class);
-            intent.putExtra("id",idArray.get(position));
-            intent.putExtra("longitude",longitudeArray.get(position));
-            intent.putExtra("latitude",latitudeArray.get(position));
-            startActivity(intent);
+            startMapsIntent(position);
         }
         else if(sharedPrefHelper.getCacheSelection() != (int) (id+1)) {
             final DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
@@ -63,11 +59,7 @@ public class CacheListActivity extends ListActivity {
                         case DialogInterface.BUTTON_NEGATIVE: {
                             sharedPrefHelper.setCacheSelection((int) id + 1);
                             Toast.makeText(CacheListActivity.this, "Treasure " + (id+1) + " selected!", Toast.LENGTH_LONG).show();
-                            Intent intent = new Intent(CacheListActivity.this, MapsActivity.class);
-                            intent.putExtra("id",idArray.get(position));
-                            intent.putExtra("longitude",longitudeArray.get(position));
-                            intent.putExtra("latitude",latitudeArray.get(position));
-                            startActivity(intent);
+                            startMapsIntent(position);
                             break;
                         }
                     }
@@ -82,12 +74,16 @@ public class CacheListActivity extends ListActivity {
                     }
             );
         } else {
-            Intent intent = new Intent(CacheListActivity.this, MapsActivity.class);
-            intent.putExtra("id",idArray.get(position));
-            intent.putExtra("longitude",longitudeArray.get(position));
-            intent.putExtra("latitude",latitudeArray.get(position));
-            startActivity(intent);
+            startMapsIntent(position);
         }
+    }
+
+    void startMapsIntent(final int position) {
+        Intent intent = new Intent(CacheListActivity.this, MapsActivity.class);
+        intent.putExtra("id",idArray.get(position));
+        intent.putExtra("longitude",longitudeArray.get(position));
+        intent.putExtra("latitude",latitudeArray.get(position));
+        startActivity(intent);
     }
 
     void parseJSON() {
@@ -106,10 +102,6 @@ public class CacheListActivity extends ListActivity {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-    }
-
-    public boolean getCompleted(int position) {
-        return completedArray.get(position);
     }
 
     private class JsonTask extends AsyncTask<String, String, String> {
