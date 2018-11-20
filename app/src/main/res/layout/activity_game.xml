@@ -6,20 +6,20 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <ImageView
-        android:id="@+id/infoImage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        android:layout_margin="5dp"
-        app:srcCompat="@drawable/sharp_help_black_48" />
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:gravity="center">
+
+        <ImageView
+            android:id="@+id/infoImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:layout_margin="5dp"
+            app:srcCompat="@drawable/sharp_help_black_48" />
 
         <TextView
             android:id="@+id/cacheID"
@@ -34,22 +34,56 @@
             android:text="@string/check_info_text" />
 
         <TextView
+            android:id="@+id/amountOfTriesInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/amount_of_tries"
+            android:visibility="gone"/>
+
+        <TextView
             android:id="@+id/triesLeft"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/tries_left_text"
             android:visibility="gone"/>
 
-        <Button
-            android:id="@+id/checkButton"
-            android:layout_width="@dimen/custom_button_size"
-            android:layout_height="@dimen/custom_button_size"
-            android:background="@drawable/circle"
-            android:drawableTop="@drawable/baseline_my_location_black_48"
-            android:paddingTop="@dimen/custom_button_small_padding"
-            android:paddingBottom="@dimen/custom_button_big_padding"
-            android:text="@string/check_button_text"
-            android:textSize="@dimen/button_text_size"
-            android:layout_margin="5dp"/>
+        <TextView
+            android:id="@+id/timerTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/timer_text_view"
+            android:visibility="gone"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/checkButton"
+                android:layout_width="@dimen/custom_button_size"
+                android:layout_height="@dimen/custom_button_size"
+                android:background="@drawable/circle_button_states"
+                android:drawableTop="@drawable/baseline_my_location_black_48"
+                android:paddingTop="@dimen/custom_button_small_padding"
+                android:paddingBottom="@dimen/custom_button_big_padding"
+                android:text="@string/check_button_text"
+                android:textSize="@dimen/button_text_size"
+                android:layout_margin="5dp"/>
+
+            <Button
+                android:id="@+id/surrenderButton"
+                android:layout_width="@dimen/custom_button_size"
+                android:layout_height="@dimen/custom_button_size"
+                android:background="@drawable/circle"
+                android:drawableTop="@drawable/baseline_outlined_flag_black_48"
+                android:paddingTop="@dimen/custom_button_small_padding"
+                android:paddingBottom="@dimen/custom_button_big_padding"
+                android:text="@string/surrender_button_text"
+                android:textSize="@dimen/button_text_size"
+                android:layout_margin="5dp"
+                android:visibility="gone"/>
+
+        </LinearLayout>
     </LinearLayout>
 </RelativeLayout>

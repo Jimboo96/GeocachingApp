@@ -4,10 +4,13 @@
     <string name="check_info_text">Check if you are near a beacon!</string>
     <string name="cache_ID_text">You are looking for treasure </string>
     <string name="tries_left_text">Number of tries left:  </string>
+    <string name="amount_of_tries">Amount of tries: </string>
+    <string name="timer_text_view">Time taken:  </string>
     <string name="check_button_text">CHECK</string>
     <string name="play_button_text">PLAY</string>
     <string name="map_button_text">MAP</string>
     <string name="settings_button_text">SETTINGS</string>
+    <string name="surrender_button_text">GIVE UP</string>
     <string name="placeholder_text">Lorem Ipsum</string>
     <string name="cold_zone_text">You are in the cold zone.</string>
     <string name="warm_zone_text">You are in the warm zone!</string>
@@ -15,7 +18,7 @@
 
     <string name="setting1_text">Use timer</string>
     <string name="setting2_text">Use limited tries</string>
-    <string name="setting3_text">Third setting</string>
+    <string name="setting3_text">Show amount of tries</string>
     <string name="reset_progress_button_text">RESET PROGRESS</string>
     <string name="reset_defaults_button_text">RESET DEFAULT SETTINGS</string>
 

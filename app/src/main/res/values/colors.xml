@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#303F9F</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
-    <color name="colorBackground">#203A3A</color>
+    <color name="colorPrimary">#000000</color>
+    <color name="colorPrimaryDark">#000000</color>
+    <color name="colorAccent">#000000</color>
+    <color name="colorBackground">#000000</color>
+    <color name="circleClicked">#D8D8D8</color>
+    <color name="fontClicked">#FFFFFF</color>
+    <color name="strokeColor">#000000</color>
 </resources>

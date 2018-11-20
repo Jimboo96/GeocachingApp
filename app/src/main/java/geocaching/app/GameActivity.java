@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.util.Log;
@@ -26,6 +27,7 @@ import com.estimote.proximity_sdk.api.ProximityZoneBuilder;
 import com.estimote.proximity_sdk.api.ProximityZoneContext;
 
 import java.util.List;
+import java.util.Timer;
 
 import kotlin.Unit;
 import kotlin.jvm.functions.Function0;
@@ -36,11 +38,31 @@ public class GameActivity extends Activity {
     private ProximityObserver proximityObserver;
     private TextView infoText;
     private TextView triesLeftText;
+    private TextView timerTextView;
+    private TextView amountOfTriesTextView;
+    private TextView cacheIDText;
     private String hotnessLVL = "COLD";
     private int cacheID;
-    private int numOfTries = 0;
-
     private SharedPrefHelper sharedPrefHelper;
+    private int numOfTries = 0;
+    long startTime = 0;
+    Vibrator v;
+    int vibrationMs = 100;
+
+    Handler timerHandler = new Handler();
+    Runnable timerRunnable = new Runnable() {
+        @Override
+        public void run() {
+            long millis = System.currentTimeMillis() - startTime;
+            int seconds = (int) (millis / 1000);
+            int minutes = seconds / 60;
+            seconds = seconds % 60;
+
+            timerTextView.setText(String.format("Time taken: %d:%02d", minutes, seconds));
+
+            timerHandler.postDelayed(this, 500);
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,32 +70,53 @@ public class GameActivity extends Activity {
         setContentView(R.layout.activity_game);
 
         sharedPrefHelper = new SharedPrefHelper(this);
-        checkForLimiter();
 
-        final TextView cacheIDText = findViewById(R.id.cacheID);
+        v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+        checkSettings();
+
         infoText = findViewById(R.id.textView);
-
+        cacheIDText = findViewById(R.id.cacheID);
         cacheID = getIntent().getIntExtra("selectedCacheID", 0);
         cacheIDText.append(" " + cacheID + ".");
+
+        final Button surrenderButton = findViewById(R.id.surrenderButton);
+        surrenderButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(GameActivity.this, MainActivity.class);
+                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(i);
+            }
+        });
 
         final Button checkButton = findViewById(R.id.checkButton);
         checkButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(!sharedPrefHelper.getLimiterSetting()) {
+                    numOfTries += 1;
+                }
+
                 if (sharedPrefHelper.getLimiterSetting()) {
                     if (numOfTries < Utils.AMOUNT_OF_TRIES) {
-                        checkHotness();
                         numOfTries += 1;
-                        checkForLimiter();
+                        checkHotness();
+                        triesLeftText.setText("Tries left: " + (Utils.AMOUNT_OF_TRIES - numOfTries));
                         if (numOfTries == Utils.AMOUNT_OF_TRIES) {
-                            checkButton.setVisibility(View.GONE);
-                            cacheIDText.setVisibility(View.GONE);
-                            triesLeftText.setVisibility(View.GONE);
-                            infoText.setVisibility(View.GONE);
+                            surrenderButton.setVisibility(View.VISIBLE);
+                            //cacheIDText.setVisibility(View.GONE);
+                            //triesLeftText.setVisibility(View.GONE);
+                            //infoText.setVisibility(View.GONE);
                         }
+                    } else {
+                        infoText.setText("You used up all your tries!");
                     }
                 } else {
                     checkHotness();
+                }
+
+                if(sharedPrefHelper.getThirdSetting()) {
+                    amountOfTriesTextView.setText("Amount of tries; " + numOfTries);
                 }
 
             }
@@ -123,6 +166,16 @@ public class GameActivity extends Activity {
                                 return null;
                             }
                         });
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
     }
 
     public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -206,9 +259,6 @@ public class GameActivity extends Activity {
             .build();
 
     private void checkHotness() {
-        Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-        int vibrationMs = 100;
-
         if(hotnessLVL == "COLD") {
             infoText.setText(getResources().getString(R.string.cold_zone_text));
 
@@ -238,11 +288,27 @@ public class GameActivity extends Activity {
         }
     }
 
-    private void checkForLimiter() {
+    protected void checkSettings() {
         if(sharedPrefHelper.getLimiterSetting()) {
             triesLeftText = findViewById(R.id.triesLeft);
             triesLeftText.setVisibility(View.VISIBLE);
-            triesLeftText.setText((Utils.AMOUNT_OF_TRIES - numOfTries) + ".");
+            triesLeftText.setText("Tries left: " + (Utils.AMOUNT_OF_TRIES - numOfTries));
         }
+
+        if(sharedPrefHelper.getTimerSetting()) {
+            timerTextView = findViewById(R.id.timerTextView);
+            timerTextView.setVisibility(View.VISIBLE);
+            startTime = System.currentTimeMillis();
+            timerHandler.postDelayed(timerRunnable, 0);
+        }
+
+        if(sharedPrefHelper.getThirdSetting()) {
+            amountOfTriesTextView = findViewById(R.id.amountOfTriesInfo);
+            amountOfTriesTextView.setVisibility(View.VISIBLE);
+        }
+    }
+
+    protected void stopTimer() {
+        timerHandler.removeCallbacks(timerRunnable);
     }
 }

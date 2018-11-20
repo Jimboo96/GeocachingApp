@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -28,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
 
         sharedPrefHelper = new SharedPrefHelper(this);
 
-        Button playButton = findViewById(R.id.playButton);
+        final Button playButton = findViewById(R.id.playButton);
         playButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -94,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
                         @Override
                         public void run() {
                             AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                            builder.setMessage("Are you sure you want to exit the app?").setNegativeButton("YES", dialogClickListener).setPositiveButton("NO", dialogClickListener).show();
+                            builder.setMessage("Are you sure you want to exit the application?").setNegativeButton("YES", dialogClickListener).setPositiveButton("NO", dialogClickListener).show();
                         }
                     }
             );
