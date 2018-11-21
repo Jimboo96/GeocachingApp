@@ -70,9 +70,14 @@ public class GameActivity extends Activity {
         setContentView(R.layout.activity_game);
 
         sharedPrefHelper = new SharedPrefHelper(this);
+        sharedPrefHelper.setAmountOfTries(numOfTries);
+        sharedPrefHelper.setAmountOfTriesLeft(Utils.AMOUNT_OF_TRIES);
 
         v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         checkSettings();
+
+        Intent intent = new Intent(GameActivity.this, CacheFoundActivity.class);
+        intent.putExtra("testInt", 69);
 
         infoText = findViewById(R.id.textView);
         cacheIDText = findViewById(R.id.cacheID);
@@ -91,6 +96,7 @@ public class GameActivity extends Activity {
 
         final Button checkButton = findViewById(R.id.checkButton);
         checkButton.setOnClickListener(new View.OnClickListener() {
+            int amountOfTriesLeft;
             @Override
             public void onClick(View v) {
                 if(!sharedPrefHelper.getLimiterSetting()) {
@@ -101,24 +107,23 @@ public class GameActivity extends Activity {
                     if (numOfTries < Utils.AMOUNT_OF_TRIES) {
                         numOfTries += 1;
                         checkHotness();
-                        triesLeftText.setText("Tries left: " + (Utils.AMOUNT_OF_TRIES - numOfTries));
+                        amountOfTriesLeft = Utils.AMOUNT_OF_TRIES - numOfTries;
+                        triesLeftText.setText(getResources().getString(R.string.tries_left_info) + " " + amountOfTriesLeft);
+                        sharedPrefHelper.setAmountOfTriesLeft(amountOfTriesLeft);
                         if (numOfTries == Utils.AMOUNT_OF_TRIES) {
                             surrenderButton.setVisibility(View.VISIBLE);
-                            //cacheIDText.setVisibility(View.GONE);
-                            //triesLeftText.setVisibility(View.GONE);
-                            //infoText.setVisibility(View.GONE);
                         }
                     } else {
-                        infoText.setText("You used up all your tries!");
+                        infoText.setText(getResources().getString(R.string.out_of_tries));
                     }
                 } else {
                     checkHotness();
                 }
 
                 if(sharedPrefHelper.getThirdSetting()) {
-                    amountOfTriesTextView.setText("Amount of tries; " + numOfTries);
+                    amountOfTriesTextView.setText(getResources().getString(R.string.amount_info)+  " " + numOfTries);
+                    sharedPrefHelper.setAmountOfTries(numOfTries);
                 }
-
             }
         });
 
@@ -292,7 +297,6 @@ public class GameActivity extends Activity {
         if(sharedPrefHelper.getLimiterSetting()) {
             triesLeftText = findViewById(R.id.triesLeft);
             triesLeftText.setVisibility(View.VISIBLE);
-            triesLeftText.setText("Tries left: " + (Utils.AMOUNT_OF_TRIES - numOfTries));
         }
 
         if(sharedPrefHelper.getTimerSetting()) {

@@ -91,10 +91,66 @@ class SharedPrefHelper {
         return sharedPreferences.getBoolean(context.getString(R.string.shared_pref_cache_4_state), false);
     }
 
+    void setCache1Score(int score) {
+        sharedPreferences.edit().putInt(context.getString(R.string.shared_pref_cache_1_score), score).apply();
+    }
+
+    int getCache1Score() {
+        return sharedPreferences.getInt(context.getString(R.string.shared_pref_cache_1_score), 0);
+    }
+
+    void setCache2Score(int score) {
+        sharedPreferences.edit().putInt(context.getString(R.string.shared_pref_cache_2_score), score).apply();
+    }
+
+    int getCache2Score() {
+        return sharedPreferences.getInt(context.getString(R.string.shared_pref_cache_2_score), 0);
+    }
+
+    void setCache3Score(int score) {
+        sharedPreferences.edit().putInt(context.getString(R.string.shared_pref_cache_3_score), score).apply();
+    }
+
+    int getCache3Score() {
+        return sharedPreferences.getInt(context.getString(R.string.shared_pref_cache_3_score), 0);
+    }
+
+    void setCache4Score(int score) {
+        sharedPreferences.edit().putInt(context.getString(R.string.shared_pref_cache_4_score), score).apply();
+    }
+
+    int getCache4Score() {
+        return sharedPreferences.getInt(context.getString(R.string.shared_pref_cache_4_score), 0);
+    }
+
+    void setAmountOfTries(int amount) {
+        sharedPreferences.edit().putInt(context.getString(R.string.shared_pref_amount_of_tries), amount).apply();
+    }
+
+    int getAmountOfTries() {
+        return sharedPreferences.getInt(context.getString(R.string.shared_pref_amount_of_tries), 0);
+    }
+
+    void setAmountOfTriesLeft(int amount) {
+        sharedPreferences.edit().putInt(context.getString(R.string.shared_pref_amount_of_tries_left), amount).apply();
+    }
+
+    int getAmountOfTriesLeft() {
+        return sharedPreferences.getInt(context.getString(R.string.shared_pref_amount_of_tries_left), 0);
+    }
+
     void resetCaches() {
         sharedPreferences.edit().putBoolean(context.getString(R.string.shared_pref_cache_1_state), false).apply();
         sharedPreferences.edit().putBoolean(context.getString(R.string.shared_pref_cache_2_state), false).apply();
         sharedPreferences.edit().putBoolean(context.getString(R.string.shared_pref_cache_3_state), false).apply();
         sharedPreferences.edit().putBoolean(context.getString(R.string.shared_pref_cache_4_state), false).apply();
+
+        sharedPreferences.edit().putInt(context.getString(R.string.shared_pref_cache_1_score), 0).apply();
+        sharedPreferences.edit().putInt(context.getString(R.string.shared_pref_cache_2_score), 0).apply();
+        sharedPreferences.edit().putInt(context.getString(R.string.shared_pref_cache_3_score), 0).apply();
+        sharedPreferences.edit().putInt(context.getString(R.string.shared_pref_cache_4_score), 0).apply();
+
+        sharedPreferences.edit().putInt(context.getString(R.string.shared_pref_amount_of_tries), 0).apply();
+        sharedPreferences.edit().putInt(context.getString(R.string.shared_pref_amount_of_tries_left), Utils.AMOUNT_OF_TRIES).apply();
     }
 }

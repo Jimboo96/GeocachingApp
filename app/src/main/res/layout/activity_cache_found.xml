@@ -7,7 +7,13 @@
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="You found the treasure cache" />
+        android:text="@string/treasure_found_text" />
+
+    <TextView
+        android:id="@+id/scoreView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/final_score_text" />
 
     <Button
         android:id="@+id/button"
