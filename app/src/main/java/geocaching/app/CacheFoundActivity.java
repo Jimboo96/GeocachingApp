@@ -80,21 +80,24 @@ public class CacheFoundActivity extends Activity {
 
         switch(sharedPrefHelper.getCacheSelection()) {
             case 1:
-                sharedPrefHelper.setCache1Score(calculatedScore);
                 sharedPrefHelper.setCache1Found();
+                sharedPrefHelper.setCache1Score(calculatedScore);
                 sharedPrefHelper.setCache1Time(sharedPrefHelper.getMinutes(),sharedPrefHelper.getSeconds());
                 break;
             case 2:
-                sharedPrefHelper.setCache2Score(calculatedScore);
                 sharedPrefHelper.setCache2Found();
+                sharedPrefHelper.setCache2Score(calculatedScore);
+                sharedPrefHelper.setCache2Time(sharedPrefHelper.getMinutes(),sharedPrefHelper.getSeconds());
                 break;
             case 3:
-                sharedPrefHelper.setCache3Score(calculatedScore);
                 sharedPrefHelper.setCache3Found();
+                sharedPrefHelper.setCache3Score(calculatedScore);
+                sharedPrefHelper.setCache3Time(sharedPrefHelper.getMinutes(),sharedPrefHelper.getSeconds());
                 break;
             case 4:
-                sharedPrefHelper.setCache4Score(calculatedScore);
                 sharedPrefHelper.setCache4Found();
+                sharedPrefHelper.setCache4Score(calculatedScore);
+                sharedPrefHelper.setCache4Time(sharedPrefHelper.getMinutes(),sharedPrefHelper.getSeconds());
                 break;
         }
         sharedPrefHelper.setCacheSelection(0);

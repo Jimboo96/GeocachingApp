@@ -13,11 +13,17 @@
         android:id="@+id/scoreView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="@string/timer_text_view" />
+
+    <TextView
+        android:id="@+id/timerView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:text="@string/score_text" />
 
     <Button
         android:id="@+id/button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="OK!" />
+        android:text="@string/ok_button_text" />
 </LinearLayout>

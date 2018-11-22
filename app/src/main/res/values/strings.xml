@@ -11,6 +11,7 @@
     <string name="map_button_text">MAP</string>
     <string name="settings_button_text">SETTINGS</string>
     <string name="surrender_button_text">GIVE UP</string>
+    <string name="ok_button_text">OK!</string>
 
     <string name="cold_zone_text">You are in the cold zone.</string>
     <string name="warm_zone_text">You are in the warm zone!</string>
@@ -52,6 +53,12 @@
 
     <string name="shared_pref_cache_1_minutes">SharedPrefCache1Minutes</string>
     <string name="shared_pref_cache_1_seconds">SharedPrefCache1Seconds</string>
+    <string name="shared_pref_cache_2_minutes">SharedPrefCache2Minutes</string>
+    <string name="shared_pref_cache_2_seconds">SharedPrefCache2Seconds</string>
+    <string name="shared_pref_cache_3_minutes">SharedPrefCache3Minutes</string>
+    <string name="shared_pref_cache_3_seconds">SharedPrefCache3Seconds</string>
+    <string name="shared_pref_cache_4_minutes">SharedPrefCache4Minutes</string>
+    <string name="shared_pref_cache_4_seconds">SharedPrefCache4Seconds</string>
 
     <string name="shared_pref_amount_of_tries">SharedPrefsAmountOfTries</string>
     <string name="shared_pref_amount_of_tries_left">SharedPrefsAmountOfTriesLeft</string>

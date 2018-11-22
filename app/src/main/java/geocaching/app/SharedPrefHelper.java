@@ -178,6 +178,45 @@ class SharedPrefHelper {
         return sharedPreferences.getInt(context.getString(R.string.shared_pref_cache_1_minutes), 0);
     }
 
+    void setCache2Time(int minutes, int seconds) {
+        sharedPreferences.edit().putInt(context.getString(R.string.shared_pref_cache_2_minutes), minutes).apply();
+        sharedPreferences.edit().putInt(context.getString(R.string.shared_pref_cache_2_seconds), seconds).apply();
+    }
+
+    int getCache2Seconds() {
+        return sharedPreferences.getInt(context.getString(R.string.shared_pref_cache_2_seconds), 0);
+    }
+
+    int getCache2Minutes() {
+        return sharedPreferences.getInt(context.getString(R.string.shared_pref_cache_2_minutes), 0);
+    }
+
+    void setCache3Time(int minutes, int seconds) {
+        sharedPreferences.edit().putInt(context.getString(R.string.shared_pref_cache_3_minutes), minutes).apply();
+        sharedPreferences.edit().putInt(context.getString(R.string.shared_pref_cache_3_seconds), seconds).apply();
+    }
+
+    int getCache3Seconds() {
+        return sharedPreferences.getInt(context.getString(R.string.shared_pref_cache_3_seconds), 0);
+    }
+
+    int getCache3Minutes() {
+        return sharedPreferences.getInt(context.getString(R.string.shared_pref_cache_3_minutes), 0);
+    }
+
+    void setCache4Time(int minutes, int seconds) {
+        sharedPreferences.edit().putInt(context.getString(R.string.shared_pref_cache_4_minutes), minutes).apply();
+        sharedPreferences.edit().putInt(context.getString(R.string.shared_pref_cache_4_seconds), seconds).apply();
+    }
+
+    int getCache4Seconds() {
+        return sharedPreferences.getInt(context.getString(R.string.shared_pref_cache_4_seconds), 0);
+    }
+
+    int getCache4Minutes() {
+        return sharedPreferences.getInt(context.getString(R.string.shared_pref_cache_4_minutes), 0);
+    }
+
     void resetCaches() {
         sharedPreferences.edit().putBoolean(context.getString(R.string.shared_pref_cache_1_state), false).apply();
         sharedPreferences.edit().putBoolean(context.getString(R.string.shared_pref_cache_2_state), false).apply();
@@ -194,5 +233,14 @@ class SharedPrefHelper {
         sharedPreferences.edit().putInt(context.getString(R.string.shared_pref_minutes), 0).apply();
         sharedPreferences.edit().putInt(context.getString(R.string.shared_pref_seconds), 0).apply();
         sharedPreferences.edit().putInt(context.getString(R.string.shared_pref_number_of_surrenders), 0).apply();
+
+        sharedPreferences.edit().putInt(context.getString(R.string.shared_pref_cache_1_minutes), 0).apply();
+        sharedPreferences.edit().putInt(context.getString(R.string.shared_pref_cache_1_seconds), 0).apply();
+        sharedPreferences.edit().putInt(context.getString(R.string.shared_pref_cache_2_minutes), 0).apply();
+        sharedPreferences.edit().putInt(context.getString(R.string.shared_pref_cache_2_seconds), 0).apply();
+        sharedPreferences.edit().putInt(context.getString(R.string.shared_pref_cache_3_minutes), 0).apply();
+        sharedPreferences.edit().putInt(context.getString(R.string.shared_pref_cache_3_seconds), 0).apply();
+        sharedPreferences.edit().putInt(context.getString(R.string.shared_pref_cache_4_minutes), 0).apply();
+        sharedPreferences.edit().putInt(context.getString(R.string.shared_pref_cache_4_seconds), 0).apply();
     }
 }
