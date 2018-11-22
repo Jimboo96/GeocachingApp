@@ -37,14 +37,14 @@
             android:id="@+id/amountOfTriesInfo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/amount_of_tries"
+            android:text="@string/amount_info"
             android:visibility="gone"/>
 
         <TextView
             android:id="@+id/triesLeft"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/tries_left_text"
+            android:text="@string/tries_left_info"
             android:visibility="gone"/>
 
         <TextView

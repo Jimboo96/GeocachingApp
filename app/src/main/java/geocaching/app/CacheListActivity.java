@@ -99,6 +99,8 @@ public class CacheListActivity extends ListActivity {
                 latitudeArray.add(treasure.getDouble("latitude"));
                 values[i] = "Treasure " + (i + 1);
             }
+            ArrayListAdapter adapter = new ArrayListAdapter(CacheListActivity.this, values);
+            setListAdapter(adapter);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -167,8 +169,6 @@ public class CacheListActivity extends ListActivity {
             try {
                 jObject = new JSONObject(result);
                 parseJSON();
-                ArrayListAdapter adapter = new ArrayListAdapter(CacheListActivity.this, values);
-                setListAdapter(adapter);
             } catch (JSONException e) {
                 e.printStackTrace();
             }

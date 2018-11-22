@@ -15,7 +15,6 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.estimote.mustard.rx_goodness.rx_requirements_wizard.Requirement;
 import com.estimote.mustard.rx_goodness.rx_requirements_wizard.RequirementsWizardFactory;
@@ -27,12 +26,10 @@ import com.estimote.proximity_sdk.api.ProximityZoneBuilder;
 import com.estimote.proximity_sdk.api.ProximityZoneContext;
 
 import java.util.List;
-import java.util.Timer;
 
 import kotlin.Unit;
 import kotlin.jvm.functions.Function0;
 import kotlin.jvm.functions.Function1;
-import okhttp3.internal.Util;
 
 public class GameActivity extends Activity {
     private ProximityObserver proximityObserver;
@@ -40,7 +37,6 @@ public class GameActivity extends Activity {
     private TextView triesLeftText;
     private TextView timerTextView;
     private TextView amountOfTriesTextView;
-    private TextView cacheIDText;
     private String hotnessLVL = "COLD";
     private int cacheID;
     private SharedPrefHelper sharedPrefHelper;
@@ -58,7 +54,8 @@ public class GameActivity extends Activity {
             int minutes = seconds / 60;
             seconds = seconds % 60;
 
-            timerTextView.setText(String.format("Time taken: %d:%02d", minutes, seconds));
+            sharedPrefHelper.setTime(minutes,seconds);
+            timerTextView.setText(getResources().getString(R.string.timer_text_view, minutes, seconds));
 
             timerHandler.postDelayed(this, 500);
         }
@@ -72,6 +69,7 @@ public class GameActivity extends Activity {
         sharedPrefHelper = new SharedPrefHelper(this);
         sharedPrefHelper.setAmountOfTries(numOfTries);
         sharedPrefHelper.setAmountOfTriesLeft(Utils.AMOUNT_OF_TRIES);
+        sharedPrefHelper.setTime(0,0);
 
         v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         checkSettings();
@@ -80,17 +78,39 @@ public class GameActivity extends Activity {
         intent.putExtra("testInt", 69);
 
         infoText = findViewById(R.id.textView);
-        cacheIDText = findViewById(R.id.cacheID);
         cacheID = getIntent().getIntExtra("selectedCacheID", 0);
-        cacheIDText.append(" " + cacheID + ".");
+        TextView cacheIDText = findViewById(R.id.cacheID);
+        cacheIDText.setText(getResources().getString(R.string.cache_ID_text, cacheID));
 
         final Button surrenderButton = findViewById(R.id.surrenderButton);
         surrenderButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(GameActivity.this, MainActivity.class);
-                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(i);
+                final DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        switch (which) {
+                            case DialogInterface.BUTTON_POSITIVE: {
+                                break;
+                            }
+                            case DialogInterface.BUTTON_NEGATIVE: {
+                                sharedPrefHelper.setNumberOfSurrenders();
+                                Intent i = new Intent(GameActivity.this, MainActivity.class);
+                                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                startActivity(i);
+                                break;
+                            }
+                        }
+                    }};
+                runOnUiThread(
+                        new Runnable() {
+                            @Override
+                            public void run() {
+                                AlertDialog.Builder builder = new AlertDialog.Builder(GameActivity.this);
+                                builder.setMessage("Are you sure you want to give up the search?").setNegativeButton("YES", dialogClickListener).setPositiveButton("NO", dialogClickListener).show();
+                            }
+                        }
+                );
             }
         });
 
@@ -108,7 +128,7 @@ public class GameActivity extends Activity {
                         numOfTries += 1;
                         checkHotness();
                         amountOfTriesLeft = Utils.AMOUNT_OF_TRIES - numOfTries;
-                        triesLeftText.setText(getResources().getString(R.string.tries_left_info) + " " + amountOfTriesLeft);
+                        triesLeftText.setText(getResources().getString(R.string.tries_left_info, amountOfTriesLeft));
                         sharedPrefHelper.setAmountOfTriesLeft(amountOfTriesLeft);
                         if (numOfTries == Utils.AMOUNT_OF_TRIES) {
                             surrenderButton.setVisibility(View.VISIBLE);
@@ -121,7 +141,7 @@ public class GameActivity extends Activity {
                 }
 
                 if(sharedPrefHelper.getThirdSetting()) {
-                    amountOfTriesTextView.setText(getResources().getString(R.string.amount_info)+  " " + numOfTries);
+                    amountOfTriesTextView.setText(getResources().getString(R.string.amount_info,numOfTries));
                     sharedPrefHelper.setAmountOfTries(numOfTries);
                 }
             }
@@ -264,7 +284,7 @@ public class GameActivity extends Activity {
             .build();
 
     private void checkHotness() {
-        if(hotnessLVL == "COLD") {
+        if(hotnessLVL.equals("COLD")) {
             infoText.setText(getResources().getString(R.string.cold_zone_text));
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -273,7 +293,7 @@ public class GameActivity extends Activity {
                 v.vibrate(vibrationMs / 2);
             }
 
-        } else if (hotnessLVL == "WARM") {
+        } else if (hotnessLVL.equals("WARM")) {
             infoText.setText(getResources().getString(R.string.warm_zone_text));
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -282,13 +302,13 @@ public class GameActivity extends Activity {
                 v.vibrate(vibrationMs);
             }
 
-        } else if (hotnessLVL == "HOT") {
+        } else if (hotnessLVL.equals("HOT")) {
             infoText.setText(getResources().getString(R.string.hot_zone_text));
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 v.vibrate(VibrationEffect.createOneShot(vibrationMs * 2, VibrationEffect.DEFAULT_AMPLITUDE));
             } else {
-                v.vibrate(vibrationMs * 3);
+                v.vibrate(vibrationMs * 2);
             }
         }
     }
@@ -296,6 +316,7 @@ public class GameActivity extends Activity {
     protected void checkSettings() {
         if(sharedPrefHelper.getLimiterSetting()) {
             triesLeftText = findViewById(R.id.triesLeft);
+            triesLeftText.setText(getResources().getString(R.string.tries_left_info, (Utils.AMOUNT_OF_TRIES - numOfTries)));
             triesLeftText.setVisibility(View.VISIBLE);
         }
 
@@ -308,6 +329,7 @@ public class GameActivity extends Activity {
 
         if(sharedPrefHelper.getThirdSetting()) {
             amountOfTriesTextView = findViewById(R.id.amountOfTriesInfo);
+            amountOfTriesTextView.setText(getResources().getString(R.string.amount_info, numOfTries));
             amountOfTriesTextView.setVisibility(View.VISIBLE);
         }
     }

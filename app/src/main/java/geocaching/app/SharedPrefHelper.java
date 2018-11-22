@@ -139,6 +139,45 @@ class SharedPrefHelper {
         return sharedPreferences.getInt(context.getString(R.string.shared_pref_amount_of_tries_left), 0);
     }
 
+    void setTime(int minutes, int seconds) {
+        sharedPreferences.edit().putInt(context.getString(R.string.shared_pref_minutes), minutes).apply();
+        sharedPreferences.edit().putInt(context.getString(R.string.shared_pref_seconds), seconds).apply();
+    }
+
+    int getSeconds() {
+        return sharedPreferences.getInt(context.getString(R.string.shared_pref_seconds), 0);
+    }
+
+    int getMinutes() {
+        return sharedPreferences.getInt(context.getString(R.string.shared_pref_minutes), 0);
+    }
+
+    void setNumberOfSurrenders() {
+        int amount = getNumberOfSurrenders() + 1;
+        sharedPreferences.edit().putInt(context.getString(R.string.shared_pref_number_of_surrenders), amount).apply();
+    }
+
+    void resetNumberOfSurrenders() {
+        sharedPreferences.edit().putInt(context.getString(R.string.shared_pref_number_of_surrenders), 0).apply();
+    }
+
+    int getNumberOfSurrenders() {
+        return sharedPreferences.getInt(context.getString(R.string.shared_pref_number_of_surrenders), 0);
+    }
+
+    void setCache1Time(int minutes, int seconds) {
+        sharedPreferences.edit().putInt(context.getString(R.string.shared_pref_cache_1_minutes), minutes).apply();
+        sharedPreferences.edit().putInt(context.getString(R.string.shared_pref_cache_1_seconds), seconds).apply();
+    }
+
+    int getCache1Seconds() {
+        return sharedPreferences.getInt(context.getString(R.string.shared_pref_cache_1_seconds), 0);
+    }
+
+    int getCache1Minutes() {
+        return sharedPreferences.getInt(context.getString(R.string.shared_pref_cache_1_minutes), 0);
+    }
+
     void resetCaches() {
         sharedPreferences.edit().putBoolean(context.getString(R.string.shared_pref_cache_1_state), false).apply();
         sharedPreferences.edit().putBoolean(context.getString(R.string.shared_pref_cache_2_state), false).apply();
@@ -152,5 +191,8 @@ class SharedPrefHelper {
 
         sharedPreferences.edit().putInt(context.getString(R.string.shared_pref_amount_of_tries), 0).apply();
         sharedPreferences.edit().putInt(context.getString(R.string.shared_pref_amount_of_tries_left), Utils.AMOUNT_OF_TRIES).apply();
+        sharedPreferences.edit().putInt(context.getString(R.string.shared_pref_minutes), 0).apply();
+        sharedPreferences.edit().putInt(context.getString(R.string.shared_pref_seconds), 0).apply();
+        sharedPreferences.edit().putInt(context.getString(R.string.shared_pref_number_of_surrenders), 0).apply();
     }
 }

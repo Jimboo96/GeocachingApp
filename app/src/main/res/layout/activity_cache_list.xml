@@ -22,19 +22,6 @@
         android:textSize="@dimen/description_text_size" />
 
     <TextView
-        android:id="@+id/scoreLine"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@id/secondLine"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignWithParentIfMissing="true"
-        android:layout_toRightOf="@id/firstLine"
-        android:gravity="center_vertical"
-        android:text="@string/placeholder_text"
-        android:textSize="@dimen/header_text_size"/>
-
-    <TextView
         android:id="@+id/firstLine"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

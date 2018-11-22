@@ -13,7 +13,7 @@
         android:id="@+id/scoreView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/final_score_text" />
+        android:text="@string/score_text" />
 
     <Button
         android:id="@+id/button"

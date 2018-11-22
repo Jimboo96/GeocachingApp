@@ -29,7 +29,6 @@ public class ArrayListAdapter extends ArrayAdapter<String> {
         View rowView = inflater.inflate(R.layout.activity_cache_list, parent, false);
         final TextView firstLine = (TextView) rowView.findViewById(R.id.firstLine);
         final TextView secondLine = rowView.findViewById(R.id.secondLine);
-        final TextView scoreLine = rowView.findViewById(R.id.scoreLine);
         ImageView imageView = (ImageView) rowView.findViewById(R.id.icon);
         ImageView selectionIconView = rowView.findViewById(R.id.selectionIcon);
         firstLine.setText(values[position]);
@@ -48,27 +47,23 @@ public class ArrayListAdapter extends ArrayAdapter<String> {
                 (sharedPrefHelper.getCache2State() && s.startsWith("Treasure 2")) ||
                 (sharedPrefHelper.getCache3State() && s.startsWith("Treasure 3")) ||
                 (sharedPrefHelper.getCache4State() && s.startsWith("Treasure 4")) ) {
+            firstLine.setText(context.getResources().getString(R.string.cache_found_text, values[position]));
             imageView.setImageResource(R.drawable.sharp_done_outline_black_24);
-            secondLine.setText(values[position] + " has been found!");
         }else {
             imageView.setImageResource(R.drawable.round_cancel_black_24);
-            secondLine.setText(values[position] + " hasn't been found yet!");
+            secondLine.setText(context.getResources().getString(R.string.cache_not_found_text, values[position]));
         }
 
         // Set scores on caches in list if it has been found.
-        scoreLine.setText(" " + context.getResources().getString(R.string.score_text));
         if((sharedPrefHelper.getCache1State() && s.startsWith("Treasure 1"))) {
-            scoreLine.append(": " + sharedPrefHelper.getCache1Score());
+            secondLine.setText(context.getResources().getString(R.string.score_text,sharedPrefHelper.getCache1Score()));
         }else if (sharedPrefHelper.getCache2State() && s.startsWith("Treasure 2")) {
-            scoreLine.append(": " + sharedPrefHelper.getCache2Score());
+            secondLine.setText(context.getResources().getString(R.string.score_text,sharedPrefHelper.getCache2Score()));
         }else if (sharedPrefHelper.getCache3State() && s.startsWith("Treasure 3")) {
-            scoreLine.append(": " + sharedPrefHelper.getCache3Score());
+            secondLine.setText(context.getResources().getString(R.string.score_text,sharedPrefHelper.getCache3Score()));
         }else if (sharedPrefHelper.getCache4State() && s.startsWith("Treasure 4")) {
-            scoreLine.append(": " + sharedPrefHelper.getCache4Score());
-        }else {
-            scoreLine.append(" not set.");
+            secondLine.setText(context.getResources().getString(R.string.score_text,sharedPrefHelper.getCache4Score()));
         }
-
 
         return rowView;
     }
