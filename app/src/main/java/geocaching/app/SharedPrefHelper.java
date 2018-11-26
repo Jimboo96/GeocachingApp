@@ -59,6 +59,14 @@ class SharedPrefHelper {
         return sharedPreferences.getInt(context.getString(R.string.shared_pref_cache_selection), 0);
     }
 
+    void setNearbyCache(int nearbyCacheNumber) {
+        sharedPreferences.edit().putInt(context.getString(R.string.shared_pref_cache_nearby), nearbyCacheNumber).apply();
+    }
+
+    int getCacheNearby() {
+        return sharedPreferences.getInt(context.getString(R.string.shared_pref_cache_nearby), 0);
+    }
+
     void setCache1Found() {
         sharedPreferences.edit().putBoolean(context.getString(R.string.shared_pref_cache_1_state), true).apply();
     }
@@ -168,6 +176,7 @@ class SharedPrefHelper {
     void setCache1Time(int minutes, int seconds) {
         sharedPreferences.edit().putInt(context.getString(R.string.shared_pref_cache_1_minutes), minutes).apply();
         sharedPreferences.edit().putInt(context.getString(R.string.shared_pref_cache_1_seconds), seconds).apply();
+        sharedPreferences.edit().putBoolean(context.getString(R.string.shared_pref_cache_1_time_set), true).apply();
     }
 
     int getCache1Seconds() {
@@ -178,9 +187,14 @@ class SharedPrefHelper {
         return sharedPreferences.getInt(context.getString(R.string.shared_pref_cache_1_minutes), 0);
     }
 
+    boolean getCache1TimeSet() {
+        return sharedPreferences.getBoolean(context.getString(R.string.shared_pref_cache_1_time_set), true);
+    }
+
     void setCache2Time(int minutes, int seconds) {
         sharedPreferences.edit().putInt(context.getString(R.string.shared_pref_cache_2_minutes), minutes).apply();
         sharedPreferences.edit().putInt(context.getString(R.string.shared_pref_cache_2_seconds), seconds).apply();
+        sharedPreferences.edit().putBoolean(context.getString(R.string.shared_pref_cache_2_time_set), true).apply();
     }
 
     int getCache2Seconds() {
@@ -191,9 +205,14 @@ class SharedPrefHelper {
         return sharedPreferences.getInt(context.getString(R.string.shared_pref_cache_2_minutes), 0);
     }
 
+    boolean getCache2TimeSet() {
+        return sharedPreferences.getBoolean(context.getString(R.string.shared_pref_cache_2_time_set), true);
+    }
+
     void setCache3Time(int minutes, int seconds) {
         sharedPreferences.edit().putInt(context.getString(R.string.shared_pref_cache_3_minutes), minutes).apply();
         sharedPreferences.edit().putInt(context.getString(R.string.shared_pref_cache_3_seconds), seconds).apply();
+        sharedPreferences.edit().putBoolean(context.getString(R.string.shared_pref_cache_3_time_set), true).apply();
     }
 
     int getCache3Seconds() {
@@ -204,9 +223,14 @@ class SharedPrefHelper {
         return sharedPreferences.getInt(context.getString(R.string.shared_pref_cache_3_minutes), 0);
     }
 
+    boolean getCache3TimeSet() {
+        return sharedPreferences.getBoolean(context.getString(R.string.shared_pref_cache_3_time_set), true);
+    }
+
     void setCache4Time(int minutes, int seconds) {
         sharedPreferences.edit().putInt(context.getString(R.string.shared_pref_cache_4_minutes), minutes).apply();
         sharedPreferences.edit().putInt(context.getString(R.string.shared_pref_cache_4_seconds), seconds).apply();
+        sharedPreferences.edit().putBoolean(context.getString(R.string.shared_pref_cache_4_time_set), true).apply();
     }
 
     int getCache4Seconds() {
@@ -215,6 +239,10 @@ class SharedPrefHelper {
 
     int getCache4Minutes() {
         return sharedPreferences.getInt(context.getString(R.string.shared_pref_cache_4_minutes), 0);
+    }
+
+    boolean getCache4TimeSet() {
+        return sharedPreferences.getBoolean(context.getString(R.string.shared_pref_cache_4_time_set), true);
     }
 
     void resetCaches() {
@@ -242,5 +270,12 @@ class SharedPrefHelper {
         sharedPreferences.edit().putInt(context.getString(R.string.shared_pref_cache_3_seconds), 0).apply();
         sharedPreferences.edit().putInt(context.getString(R.string.shared_pref_cache_4_minutes), 0).apply();
         sharedPreferences.edit().putInt(context.getString(R.string.shared_pref_cache_4_seconds), 0).apply();
+
+        sharedPreferences.edit().putBoolean(context.getString(R.string.shared_pref_cache_1_time_set), false).apply();
+        sharedPreferences.edit().putBoolean(context.getString(R.string.shared_pref_cache_2_time_set), false).apply();
+        sharedPreferences.edit().putBoolean(context.getString(R.string.shared_pref_cache_3_time_set), false).apply();
+        sharedPreferences.edit().putBoolean(context.getString(R.string.shared_pref_cache_4_time_set), false).apply();
+
+        sharedPreferences.edit().putInt(context.getString(R.string.shared_pref_cache_nearby), 0).apply();
     }
 }

@@ -35,7 +35,6 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if(sharedPrefHelper.getCacheSelection() != 0) {
                     Intent intent = new Intent(MainActivity.this, GameActivity.class);
-                    intent.putExtra("selectedCacheID", sharedPrefHelper.getCacheSelection());
                     startActivity(intent);
                 } else {
                     Toast.makeText(MainActivity.this, "Select a treasure cache from MAP first!", Toast.LENGTH_LONG).show();

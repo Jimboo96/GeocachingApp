@@ -26,7 +26,11 @@
     <string name="timer_text_view">Time taken: %d:%02d</string>
 
     <string name="treasure_found_text">Congratulations! You found treasure cache %d!</string>
+    <string name="wrong_treasure_found_text">Congratulations, you found a wrong treasure cache... Oh bummer!</string>
     <string name="score_text">Your score: %d</string>
+
+    <string name="list_score_text">Your score: %d | Time: not set</string>
+    <string name="list_score_timer_text">Your score: %d | Time : %d:%02d</string>
 
     <string name="setting1_text">Use timer</string>
     <string name="setting2_text">Use limited tries</string>
@@ -41,6 +45,8 @@
     <string name="shared_pref_setting3">SharedPrefsThirdSetting></string>
 
     <string name="shared_pref_cache_selection">SharedPrefsCacheSelection></string>
+    <string name="shared_pref_cache_nearby">SharedPrefsCacheNearby</string>
+
     <string name="shared_pref_cache_1_state">SharedPrefsCache1State></string>
     <string name="shared_pref_cache_2_state">SharedPrefsCache2State></string>
     <string name="shared_pref_cache_3_state">SharedPrefsCache3State></string>
@@ -59,6 +65,11 @@
     <string name="shared_pref_cache_3_seconds">SharedPrefCache3Seconds</string>
     <string name="shared_pref_cache_4_minutes">SharedPrefCache4Minutes</string>
     <string name="shared_pref_cache_4_seconds">SharedPrefCache4Seconds</string>
+
+    <string name="shared_pref_cache_1_time_set">SharedPrefCache1TimeSet</string>
+    <string name="shared_pref_cache_2_time_set">SharedPrefCache2TimeSet</string>
+    <string name="shared_pref_cache_3_time_set">SharedPrefCache3TimeSet</string>
+    <string name="shared_pref_cache_4_time_set">SharedPrefCache4TimeSet</string>
 
     <string name="shared_pref_amount_of_tries">SharedPrefsAmountOfTries</string>
     <string name="shared_pref_amount_of_tries_left">SharedPrefsAmountOfTriesLeft</string>

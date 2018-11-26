@@ -38,7 +38,6 @@ public class GameActivity extends Activity {
     private TextView timerTextView;
     private TextView amountOfTriesTextView;
     private String hotnessLVL = "COLD";
-    private int cacheID;
     private SharedPrefHelper sharedPrefHelper;
     private int numOfTries = 0;
     long startTime = 0;
@@ -69,18 +68,14 @@ public class GameActivity extends Activity {
         sharedPrefHelper = new SharedPrefHelper(this);
         sharedPrefHelper.setAmountOfTries(numOfTries);
         sharedPrefHelper.setAmountOfTriesLeft(Utils.AMOUNT_OF_TRIES);
-        sharedPrefHelper.setTime(0,0);
+        //sharedPrefHelper.setTime(0,0);
 
         v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         checkSettings();
 
-        Intent intent = new Intent(GameActivity.this, CacheFoundActivity.class);
-        intent.putExtra("testInt", 69);
-
         infoText = findViewById(R.id.textView);
-        cacheID = getIntent().getIntExtra("selectedCacheID", 0);
         TextView cacheIDText = findViewById(R.id.cacheID);
-        cacheIDText.setText(getResources().getString(R.string.cache_ID_text, cacheID));
+        cacheIDText.setText(getResources().getString(R.string.cache_ID_text, sharedPrefHelper.getCacheSelection()));
 
         final Button surrenderButton = findViewById(R.id.surrenderButton);
         surrenderButton.setOnClickListener(new View.OnClickListener() {
@@ -119,10 +114,6 @@ public class GameActivity extends Activity {
             int amountOfTriesLeft;
             @Override
             public void onClick(View v) {
-                if(!sharedPrefHelper.getLimiterSetting()) {
-                    numOfTries += 1;
-                }
-
                 if (sharedPrefHelper.getLimiterSetting()) {
                     if (numOfTries < Utils.AMOUNT_OF_TRIES) {
                         numOfTries += 1;
@@ -137,6 +128,7 @@ public class GameActivity extends Activity {
                         infoText.setText(getResources().getString(R.string.out_of_tries));
                     }
                 } else {
+                    numOfTries += 1;
                     checkHotness();
                 }
 
@@ -193,15 +185,56 @@ public class GameActivity extends Activity {
                         });
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-    }
+    ProximityZone warmZone = new ProximityZoneBuilder()
+            .forTag("treasure")
+            .inCustomRange(Utils.CACHE_WARM_ZONE)
+            .onEnter(new Function1<ProximityZoneContext, Unit>() {
+                @Override
+                public Unit invoke(ProximityZoneContext context) {
+                    int treasureNum = Integer.parseInt(context.getAttachments().get("treasure"));
+                    sharedPrefHelper.setNearbyCache(treasureNum);
+                    //textView.setText("You are in the cold zone of treasure " + treasureNum);
+                    hotnessLVL = "WARM";
+                    Log.d("app", "You are in the warm zone of treasure " + treasureNum);
+                    return null;
+                }
+            })
+            .onExit(new Function1<ProximityZoneContext, Unit>() {
+                @Override
+                public Unit invoke(ProximityZoneContext context) {
+                    hotnessLVL = "COLD";
+                    Log.d("app", "Exited warm zone!");
+                    return null;
+                }
+            })
+            .build();
 
-    @Override
-    public void onResume() {
-        super.onResume();
-    }
+    ProximityZone hotZone = new ProximityZoneBuilder()
+            .forTag("treasure")
+            .inCustomRange(Utils.CACHE_HOT_ZONE)
+            .onEnter(new Function1<ProximityZoneContext, Unit>() {
+                @Override
+                public Unit invoke(ProximityZoneContext context) {
+                    int treasureNum = Integer.parseInt(context.getAttachments().get("treasure"));
+                    sharedPrefHelper.setNearbyCache(treasureNum);
+                    //if(treasureNum.equals(String.valueOf(cacheID))) {
+                    //Toast.makeText(GameActivity.this, "yes it works", Toast.LENGTH_LONG).show();
+                    //textView.setText("You are in the hot zone of treasure " + treasureNum);
+                    hotnessLVL = "HOT";
+                    Log.d("app", "You are in the hot zone of treasure " + treasureNum);
+                    //}
+                    return null;
+                }
+            })
+            .onExit(new Function1<ProximityZoneContext, Unit>() {
+                @Override
+                public Unit invoke(ProximityZoneContext context) {
+                    hotnessLVL = "WARM";
+                    Log.d("app", "Exited hot zone!");
+                    return null;
+                }
+            })
+            .build();
 
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if(keyCode == KeyEvent.KEYCODE_BACK) {
@@ -233,55 +266,6 @@ public class GameActivity extends Activity {
         }
         return super.onKeyDown(keyCode, event);
     }
-
-    ProximityZone warmZone = new ProximityZoneBuilder()
-            .forTag("treasure")
-            .inCustomRange(Utils.CACHE_WARM_ZONE)
-            .onEnter(new Function1<ProximityZoneContext, Unit>() {
-                @Override
-                public Unit invoke(ProximityZoneContext context) {
-                    String treasureNum = context.getAttachments().get("treasure");
-                    //textView.setText("You are in the cold zone of treasure " + treasureNum);
-                    hotnessLVL = "WARM";
-                    Log.d("app", "You are in the warm zone of treasure " + treasureNum);
-                    return null;
-                }
-            })
-            .onExit(new Function1<ProximityZoneContext, Unit>() {
-                @Override
-                public Unit invoke(ProximityZoneContext context) {
-                    hotnessLVL = "COLD";
-                    Log.d("app", "Exited warm zone!");
-                    return null;
-                }
-            })
-            .build();
-
-    ProximityZone hotZone = new ProximityZoneBuilder()
-            .forTag("treasure")
-            .inCustomRange(Utils.CACHE_HOT_ZONE)
-            .onEnter(new Function1<ProximityZoneContext, Unit>() {
-                @Override
-                public Unit invoke(ProximityZoneContext context) {
-                    String treasureNum = context.getAttachments().get("treasure");
-                    //if(treasureNum.equals(String.valueOf(cacheID))) {
-                    //Toast.makeText(GameActivity.this, "yes it works", Toast.LENGTH_LONG).show();
-                    //textView.setText("You are in the hot zone of treasure " + treasureNum);
-                    hotnessLVL = "HOT";
-                    Log.d("app", "You are in the hot zone of treasure " + treasureNum);
-                    //}
-                    return null;
-                }
-            })
-            .onExit(new Function1<ProximityZoneContext, Unit>() {
-                @Override
-                public Unit invoke(ProximityZoneContext context) {
-                    hotnessLVL = "WARM";
-                    Log.d("app", "Exited hot zone!");
-                    return null;
-                }
-            })
-            .build();
 
     private void checkHotness() {
         if(hotnessLVL.equals("COLD")) {

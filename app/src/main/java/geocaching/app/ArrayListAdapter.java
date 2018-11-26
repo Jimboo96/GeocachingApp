@@ -15,7 +15,7 @@ public class ArrayListAdapter extends ArrayAdapter<String> {
 
     private SharedPrefHelper sharedPrefHelper;
 
-    public ArrayListAdapter(Context context, String[] values) {
+    ArrayListAdapter(Context context, String[] values) {
         super(context, R.layout.activity_cache_list, values);
         this.context = context;
         this.values = values;
@@ -56,13 +56,23 @@ public class ArrayListAdapter extends ArrayAdapter<String> {
 
         // Set scores on caches in list if it has been found.
         if((sharedPrefHelper.getCache1State() && s.startsWith("Treasure 1"))) {
-            secondLine.setText(context.getResources().getString(R.string.score_text,sharedPrefHelper.getCache1Score()));
+            secondLine.setText(context.getResources().getString(R.string.list_score_text,sharedPrefHelper.getCache1Score()));
         }else if (sharedPrefHelper.getCache2State() && s.startsWith("Treasure 2")) {
-            secondLine.setText(context.getResources().getString(R.string.score_text,sharedPrefHelper.getCache2Score()));
+            secondLine.setText(context.getResources().getString(R.string.list_score_text,sharedPrefHelper.getCache2Score()));
         }else if (sharedPrefHelper.getCache3State() && s.startsWith("Treasure 3")) {
-            secondLine.setText(context.getResources().getString(R.string.score_text,sharedPrefHelper.getCache3Score()));
+            secondLine.setText(context.getResources().getString(R.string.list_score_text,sharedPrefHelper.getCache3Score()));
         }else if (sharedPrefHelper.getCache4State() && s.startsWith("Treasure 4")) {
-            secondLine.setText(context.getResources().getString(R.string.score_text,sharedPrefHelper.getCache4Score()));
+            secondLine.setText(context.getResources().getString(R.string.list_score_text,sharedPrefHelper.getCache4Score()));
+        }
+
+        if((sharedPrefHelper.getCache1TimeSet() && s.startsWith("Treasure 1"))) {
+            secondLine.setText(context.getResources().getString(R.string.list_score_timer_text,sharedPrefHelper.getCache1Score(),sharedPrefHelper.getCache1Minutes(),sharedPrefHelper.getCache1Seconds()));
+        }else if (sharedPrefHelper.getCache2TimeSet()&& s.startsWith("Treasure 2")) {
+            secondLine.setText(context.getResources().getString(R.string.list_score_timer_text,sharedPrefHelper.getCache2Score(),sharedPrefHelper.getCache2Minutes(),sharedPrefHelper.getCache2Seconds()));
+        }else if (sharedPrefHelper.getCache3TimeSet() && s.startsWith("Treasure 3")) {
+            secondLine.setText(context.getResources().getString(R.string.list_score_timer_text,sharedPrefHelper.getCache3Score(),sharedPrefHelper.getCache3Minutes(),sharedPrefHelper.getCache3Seconds()));
+        }else if (sharedPrefHelper.getCache4TimeSet() && s.startsWith("Treasure 4")) {
+            secondLine.setText(context.getResources().getString(R.string.list_score_timer_text,sharedPrefHelper.getCache4Score(),sharedPrefHelper.getCache4Minutes(),sharedPrefHelper.getCache4Seconds()));
         }
 
         return rowView;
