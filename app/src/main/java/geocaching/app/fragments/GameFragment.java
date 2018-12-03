@@ -1,7 +1,8 @@
-package geocaching.app;
+package geocaching.app.fragments;
 
-import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -12,7 +13,9 @@ import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -27,11 +30,17 @@ import com.estimote.proximity_sdk.api.ProximityZoneContext;
 
 import java.util.List;
 
+import geocaching.app.R;
+import geocaching.app.activities.MainActivity;
+import geocaching.app.helpers.SharedPrefHelper;
+import geocaching.app.helpers.Utils;
+import geocaching.app.interfaces.FragmentLoader;
+import geocaching.app.interfaces.KeyEventListener;
 import kotlin.Unit;
 import kotlin.jvm.functions.Function0;
 import kotlin.jvm.functions.Function1;
 
-public class GameActivity extends Activity {
+public class GameFragment extends Fragment implements KeyEventListener, FragmentLoader {
     private ProximityObserver proximityObserver;
     private TextView infoText;
     private TextView triesLeftText;
@@ -43,6 +52,8 @@ public class GameActivity extends Activity {
     long startTime = 0;
     Vibrator v;
     int vibrationMs = 100;
+    int treasureNum = 0;
+    View view;
 
     Handler timerHandler = new Handler();
     Runnable timerRunnable = new Runnable() {
@@ -61,23 +72,22 @@ public class GameActivity extends Activity {
     };
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_game);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        view = inflater.inflate(R.layout.fragment_game, container, false);
 
-        sharedPrefHelper = new SharedPrefHelper(this);
+        sharedPrefHelper = new SharedPrefHelper(getContext());
         sharedPrefHelper.setAmountOfTries(numOfTries);
         sharedPrefHelper.setAmountOfTriesLeft(Utils.AMOUNT_OF_TRIES);
-        //sharedPrefHelper.setTime(0,0);
 
-        v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+        v = (Vibrator) getActivity().getSystemService(Context.VIBRATOR_SERVICE);
         checkSettings();
 
-        infoText = findViewById(R.id.textView);
-        TextView cacheIDText = findViewById(R.id.cacheID);
+        infoText = view.findViewById(R.id.textView);
+        TextView cacheIDText = view.findViewById(R.id.cacheID);
         cacheIDText.setText(getResources().getString(R.string.cache_ID_text, sharedPrefHelper.getCacheSelection()));
 
-        final Button surrenderButton = findViewById(R.id.surrenderButton);
+        final Button surrenderButton = view.findViewById(R.id.surrenderButton);
         surrenderButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -90,18 +100,16 @@ public class GameActivity extends Activity {
                             }
                             case DialogInterface.BUTTON_NEGATIVE: {
                                 sharedPrefHelper.setNumberOfSurrenders();
-                                Intent i = new Intent(GameActivity.this, MainActivity.class);
-                                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                startActivity(i);
+                                loadFragment(new MenuFragment());
                                 break;
                             }
                         }
                     }};
-                runOnUiThread(
+                getActivity().runOnUiThread(
                         new Runnable() {
                             @Override
                             public void run() {
-                                AlertDialog.Builder builder = new AlertDialog.Builder(GameActivity.this);
+                                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                                 builder.setMessage("Are you sure you want to give up the search?").setNegativeButton("YES", dialogClickListener).setPositiveButton("NO", dialogClickListener).show();
                             }
                         }
@@ -109,7 +117,7 @@ public class GameActivity extends Activity {
             }
         });
 
-        final Button checkButton = findViewById(R.id.checkButton);
+        final Button checkButton = view.findViewById(R.id.checkButton);
         checkButton.setOnClickListener(new View.OnClickListener() {
             int amountOfTriesLeft;
             @Override
@@ -121,6 +129,7 @@ public class GameActivity extends Activity {
                         amountOfTriesLeft = Utils.AMOUNT_OF_TRIES - numOfTries;
                         triesLeftText.setText(getResources().getString(R.string.tries_left_info, amountOfTriesLeft));
                         sharedPrefHelper.setAmountOfTriesLeft(amountOfTriesLeft);
+                        // Reaching the limit of tries.
                         if (numOfTries == Utils.AMOUNT_OF_TRIES) {
                             surrenderButton.setVisibility(View.VISIBLE);
                         }
@@ -139,11 +148,17 @@ public class GameActivity extends Activity {
             }
         });
 
+        return view;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         EstimoteCloudCredentials cloudCredentials =
                 new EstimoteCloudCredentials("my-app-2vi", "8d4cf42cfb254f328f55eeaf051f8b90");
 
         this.proximityObserver =
-                new ProximityObserverBuilder(getApplicationContext(), cloudCredentials)
+                new ProximityObserverBuilder(getActivity().getApplicationContext(), cloudCredentials)
                         .onError(new Function1<Throwable, Unit>() {
                             @Override
                             public Unit invoke(Throwable throwable) {
@@ -156,7 +171,7 @@ public class GameActivity extends Activity {
 
         RequirementsWizardFactory
                 .createEstimoteRequirementsWizard()
-                .fulfillRequirements(this,
+                .fulfillRequirements(getActivity(),
                         // onRequirementsFulfilled
                         new Function0<Unit>() {
                             @Override
@@ -191,17 +206,16 @@ public class GameActivity extends Activity {
             .onEnter(new Function1<ProximityZoneContext, Unit>() {
                 @Override
                 public Unit invoke(ProximityZoneContext context) {
-                    int treasureNum = Integer.parseInt(context.getAttachments().get("treasure"));
-                    sharedPrefHelper.setNearbyCache(treasureNum);
-                    //textView.setText("You are in the cold zone of treasure " + treasureNum);
+                    treasureNum = Integer.parseInt(context.getAttachments().get("treasure"));
                     hotnessLVL = "WARM";
-                    Log.d("app", "You are in the warm zone of treasure " + treasureNum);
+                    Log.d("app", "Entered warm zone!");
                     return null;
                 }
             })
             .onExit(new Function1<ProximityZoneContext, Unit>() {
                 @Override
                 public Unit invoke(ProximityZoneContext context) {
+                    treasureNum = Integer.parseInt(context.getAttachments().get("treasure"));
                     hotnessLVL = "COLD";
                     Log.d("app", "Exited warm zone!");
                     return null;
@@ -215,20 +229,16 @@ public class GameActivity extends Activity {
             .onEnter(new Function1<ProximityZoneContext, Unit>() {
                 @Override
                 public Unit invoke(ProximityZoneContext context) {
-                    int treasureNum = Integer.parseInt(context.getAttachments().get("treasure"));
-                    sharedPrefHelper.setNearbyCache(treasureNum);
-                    //if(treasureNum.equals(String.valueOf(cacheID))) {
-                    //Toast.makeText(GameActivity.this, "yes it works", Toast.LENGTH_LONG).show();
-                    //textView.setText("You are in the hot zone of treasure " + treasureNum);
+                    treasureNum = Integer.parseInt(context.getAttachments().get("treasure"));
                     hotnessLVL = "HOT";
-                    Log.d("app", "You are in the hot zone of treasure " + treasureNum);
-                    //}
+                    Log.d("app", "Entered hot zone!");
                     return null;
                 }
             })
             .onExit(new Function1<ProximityZoneContext, Unit>() {
                 @Override
                 public Unit invoke(ProximityZoneContext context) {
+                    treasureNum = Integer.parseInt(context.getAttachments().get("treasure"));
                     hotnessLVL = "WARM";
                     Log.d("app", "Exited hot zone!");
                     return null;
@@ -236,6 +246,9 @@ public class GameActivity extends Activity {
             })
             .build();
 
+
+
+    @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if(keyCode == KeyEvent.KEYCODE_BACK) {
             final DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
@@ -246,25 +259,72 @@ public class GameActivity extends Activity {
                             break;
                         }
                         case DialogInterface.BUTTON_NEGATIVE: {
-                            Intent i = new Intent(GameActivity.this, MainActivity.class);
-                            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                            startActivity(i);
+                            if (numOfTries == Utils.AMOUNT_OF_TRIES && sharedPrefHelper.getLimiterSetting()) {
+                                sharedPrefHelper.setNumberOfSurrenders();
+                            }
+                            loadFragment(new MenuFragment());
                             break;
                         }
                     }
                 }};
-            runOnUiThread(
+            getActivity().runOnUiThread(
                     new Runnable() {
                         @Override
                         public void run() {
-                            AlertDialog.Builder builder = new AlertDialog.Builder(GameActivity.this);
-                            builder.setMessage("Are you sure you want to exit?").setNegativeButton("YES", dialogClickListener).setPositiveButton("NO", dialogClickListener).show();
+                            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                            if (numOfTries == Utils.AMOUNT_OF_TRIES && sharedPrefHelper.getLimiterSetting()) {
+                                builder.setMessage("Are you sure you want to give up the search?").setNegativeButton("YES", dialogClickListener).setPositiveButton("NO", dialogClickListener).show();
+                            }else {
+                                builder.setMessage("Are you sure you want to exit?").setNegativeButton("YES", dialogClickListener).setPositiveButton("NO", dialogClickListener).show();
+                            }
+
                         }
                     }
             );
             return false;
         }
-        return super.onKeyDown(keyCode, event);
+        return onKeyDown(keyCode,event);
+    }
+
+    @Override
+    public void onPause() {
+        Log.d("lifecycle", "pause");
+        super.onPause();
+    }
+
+    @Override
+    public void onStop() {
+        Log.d("lifecycle", "stop");
+        super.onStop();
+    }
+
+    @Override
+    public void onDestroyView() {
+        Log.d("lifecycle", "onDestroyView");
+        super.onDestroyView();
+    }
+
+    @Override
+    public void onDestroy() {
+        Log.d("lifecycle", "onDestroy");
+        super.onDestroy();
+    }
+
+    @Override
+    public void onDetach() {
+        Log.d("lifecycle", "onDetach");
+        stopTimer();
+        super.onDetach();
+    }
+
+    @Override
+    public void loadFragment(Fragment fragment) {
+        stopTimer();
+        FragmentManager fm = getFragmentManager();
+        android.app.FragmentTransaction fragmentTransaction = fm.beginTransaction();
+        fragmentTransaction.replace(R.id.frameLayout, fragment);
+        fragmentTransaction.commit();
+        ((MainActivity)getActivity()).setCurrentFragment(fragment);
     }
 
     private void checkHotness() {
@@ -278,7 +338,8 @@ public class GameActivity extends Activity {
             }
 
         } else if (hotnessLVL.equals("WARM")) {
-            infoText.setText(getResources().getString(R.string.warm_zone_text));
+            sharedPrefHelper.setNearbyCache(treasureNum);
+            infoText.setText(getResources().getString(R.string.warm_zone_text, treasureNum));
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 v.vibrate(VibrationEffect.createOneShot(vibrationMs, VibrationEffect.DEFAULT_AMPLITUDE));
@@ -287,7 +348,8 @@ public class GameActivity extends Activity {
             }
 
         } else if (hotnessLVL.equals("HOT")) {
-            infoText.setText(getResources().getString(R.string.hot_zone_text));
+            sharedPrefHelper.setNearbyCache(treasureNum);
+            infoText.setText(getResources().getString(R.string.hot_zone_text, treasureNum));
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 v.vibrate(VibrationEffect.createOneShot(vibrationMs * 2, VibrationEffect.DEFAULT_AMPLITUDE));
@@ -299,26 +361,26 @@ public class GameActivity extends Activity {
 
     protected void checkSettings() {
         if(sharedPrefHelper.getLimiterSetting()) {
-            triesLeftText = findViewById(R.id.triesLeft);
+            triesLeftText = view.findViewById(R.id.triesLeft);
             triesLeftText.setText(getResources().getString(R.string.tries_left_info, (Utils.AMOUNT_OF_TRIES - numOfTries)));
             triesLeftText.setVisibility(View.VISIBLE);
         }
 
         if(sharedPrefHelper.getTimerSetting()) {
-            timerTextView = findViewById(R.id.timerTextView);
+            timerTextView = view.findViewById(R.id.timerTextView);
             timerTextView.setVisibility(View.VISIBLE);
             startTime = System.currentTimeMillis();
             timerHandler.postDelayed(timerRunnable, 0);
         }
 
         if(sharedPrefHelper.getThirdSetting()) {
-            amountOfTriesTextView = findViewById(R.id.amountOfTriesInfo);
+            amountOfTriesTextView = view.findViewById(R.id.amountOfTriesInfo);
             amountOfTriesTextView.setText(getResources().getString(R.string.amount_info, numOfTries));
             amountOfTriesTextView.setVisibility(View.VISIBLE);
         }
     }
 
-    protected void stopTimer() {
+    private void stopTimer() {
         timerHandler.removeCallbacks(timerRunnable);
     }
 }

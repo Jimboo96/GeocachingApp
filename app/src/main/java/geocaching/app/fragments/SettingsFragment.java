@@ -1,33 +1,41 @@
-package geocaching.app;
+package geocaching.app.fragments;
 
-import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Switch;
 import android.widget.Toast;
 
-public class SettingsActivity extends Activity {
+import geocaching.app.R;
+import geocaching.app.activities.MainActivity;
+import geocaching.app.helpers.SharedPrefHelper;
+import geocaching.app.interfaces.FragmentLoader;
+import geocaching.app.interfaces.KeyEventListener;
+
+public class SettingsFragment extends Fragment implements KeyEventListener, FragmentLoader {
+    View view;
     private SharedPrefHelper sharedPrefHelper;
     private Switch switch1, switch2, switch3;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_settings);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        view = inflater.inflate(R.layout.fragment_settings, container, false);
+        switch1 = view.findViewById(R.id.switch1);
+        switch2 = view.findViewById(R.id.switch2);
+        switch3 = view.findViewById(R.id.switch3);
 
-        switch1 = findViewById(R.id.switch1);
-        switch2 = findViewById(R.id.switch2);
-        switch3 = findViewById(R.id.switch3);
-
-        sharedPrefHelper = new SharedPrefHelper(this);
+        sharedPrefHelper = new SharedPrefHelper(getContext());
         checkSettings();
 
-        Button resetDefaultsButton = findViewById(R.id.resetDefaultsButton);
+        Button resetDefaultsButton = view.findViewById(R.id.resetDefaultsButton);
         resetDefaultsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -43,16 +51,16 @@ public class SettingsActivity extends Activity {
                                 sharedPrefHelper.saveLimiterSetting(false);
                                 sharedPrefHelper.saveThirdSetting(false);
                                 checkSettings();
-                                Toast.makeText(SettingsActivity.this, "Settings reseted.", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getContext(), "Settings reseted.", Toast.LENGTH_SHORT).show();
                                 break;
                             }
                         }
                     }};
-                runOnUiThread(
+                getActivity().runOnUiThread(
                         new Runnable() {
                             @Override
                             public void run() {
-                                AlertDialog.Builder builder = new AlertDialog.Builder(SettingsActivity.this);
+                                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                                 builder.setMessage("Are you sure you want to reset the default settings?").setNegativeButton("YES", dialogClickListener).setPositiveButton("NO", dialogClickListener).show();
                             }
                         }
@@ -60,7 +68,7 @@ public class SettingsActivity extends Activity {
             }
         });
 
-        Button resetProgressButton = findViewById(R.id.resetProgressButton);
+        Button resetProgressButton = view.findViewById(R.id.resetProgressButton);
         resetProgressButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -74,16 +82,16 @@ public class SettingsActivity extends Activity {
                             case DialogInterface.BUTTON_NEGATIVE: {
                                 sharedPrefHelper.resetCaches();
                                 sharedPrefHelper.setCacheSelection(0);
-                                Toast.makeText(SettingsActivity.this, "Progress reseted.", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getContext(), "Progress reseted.", Toast.LENGTH_SHORT).show();
                                 break;
                             }
                         }
                     }};
-                runOnUiThread(
+                getActivity().runOnUiThread(
                         new Runnable() {
                             @Override
                             public void run() {
-                                AlertDialog.Builder builder = new AlertDialog.Builder(SettingsActivity.this);
+                                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                                 builder.setMessage("Are you sure you want to reset your progress? You'll have to find all the found caches again.").setNegativeButton("YES", dialogClickListener).setPositiveButton("NO", dialogClickListener).show();
                             }
                         }
@@ -109,6 +117,25 @@ public class SettingsActivity extends Activity {
                 sharedPrefHelper.changeThirdSetting();
             }
         });
+        return view;
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if(keyCode == KeyEvent.KEYCODE_BACK) {
+            loadFragment(new MenuFragment());
+            return false;
+        }
+        return onKeyDown(keyCode,event);
+    }
+
+    @Override
+    public void loadFragment(Fragment fragment) {
+        FragmentManager fm = getFragmentManager();
+        android.app.FragmentTransaction fragmentTransaction = fm.beginTransaction();
+        fragmentTransaction.replace(R.id.frameLayout, fragment);
+        fragmentTransaction.commit();
+        ((MainActivity)getActivity()).setCurrentFragment(fragment);
     }
 
     private void checkSettings() {

@@ -1,4 +1,4 @@
-package geocaching.app;
+package geocaching.app.activities;
 
 import android.app.AlertDialog;
 import android.app.ListActivity;
@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -22,6 +23,9 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+
+import geocaching.app.helpers.ArrayListAdapter;
+import geocaching.app.helpers.SharedPrefHelper;
 
 public class CacheListActivity extends ListActivity {
     private ProgressDialog pd;
@@ -39,6 +43,16 @@ public class CacheListActivity extends ListActivity {
         super.onCreate(savedInstanceState);
         sharedPrefHelper = new SharedPrefHelper(this);
         new JsonTask().execute("http://www.students.oamk.fi/~t6bjji00/json_files/coordinates.json");
+    }
+
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if(keyCode == KeyEvent.KEYCODE_BACK) {
+            Intent i = new Intent(CacheListActivity.this, MainActivity.class);
+            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(i);
+            return false;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 
     @Override

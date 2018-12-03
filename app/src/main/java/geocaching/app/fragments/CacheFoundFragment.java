@@ -1,29 +1,37 @@
-package geocaching.app;
+package geocaching.app.fragments;
 
-import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
+import geocaching.app.R;
+import geocaching.app.activities.CacheFoundActivity;
+import geocaching.app.activities.MainActivity;
+import geocaching.app.activities.MapsActivity;
+import geocaching.app.helpers.SharedPrefHelper;
+import geocaching.app.helpers.Utils;
+import geocaching.app.interfaces.FragmentLoader;
+import geocaching.app.interfaces.KeyEventListener;
 
-import static java.lang.Math.abs;
-
-public class CacheFoundActivity extends Activity {
+public class CacheFoundFragment extends Fragment implements KeyEventListener,FragmentLoader{
     private SharedPrefHelper sharedPrefHelper;
+    View view;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_cache_found);
-        sharedPrefHelper = new SharedPrefHelper(this);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        view = inflater.inflate(R.layout.fragment_cache_found, container, false);
+        sharedPrefHelper = new SharedPrefHelper(getContext());
 
-        TextView textView = findViewById(R.id.textView);
+        TextView textView = view.findViewById(R.id.textView);
         if(sharedPrefHelper.getCacheSelection() == sharedPrefHelper.getCacheNearby()) {
             textView.setText(getResources().getString(R.string.treasure_found_text,sharedPrefHelper.getCacheSelection()));
             setScore();
@@ -32,20 +40,14 @@ public class CacheFoundActivity extends Activity {
         }
         sharedPrefHelper.setNearbyCache(0);
 
-        Button okButton = findViewById(R.id.button);
+        Button okButton = view.findViewById(R.id.button);
         okButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(CacheFoundActivity.this, MainActivity.class);
-                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(i);
+                loadFragment(new MenuFragment());
             }
         });
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
+        return view;
     }
 
     private void setScore() {
@@ -54,7 +56,7 @@ public class CacheFoundActivity extends Activity {
 
         if(sharedPrefHelper.getLimiterSetting()) {
             int amountOfTriesLeft = sharedPrefHelper.getAmountOfTriesLeft();
-            baseScore = (int) (Utils.BASE_SCORE * amountOfTriesLeft);
+            baseScore = Utils.BASE_SCORE * amountOfTriesLeft;
             calculatedScore += baseScore;
         }
 
@@ -82,13 +84,13 @@ public class CacheFoundActivity extends Activity {
         //If score goes below zero, set it to 0.
         if(calculatedScore < 0) {calculatedScore = 0;}
 
-        TextView scoreView = findViewById(R.id.scoreView);
+        TextView scoreView = view.findViewById(R.id.scoreView);
         scoreView.setVisibility(View.VISIBLE);
         scoreView.setText(getResources().getString(R.string.score_text,calculatedScore));
 
         //If timer is active, set the time found to cache.
         if(sharedPrefHelper.getTimerSetting()) {
-            TextView timerView = findViewById(R.id.timerView);
+            TextView timerView = view.findViewById(R.id.timerView);
             timerView.setVisibility(View.VISIBLE);
             timerView.setText(getResources().getString(R.string.timer_text_view, sharedPrefHelper.getMinutes(),sharedPrefHelper.getSeconds()));
 
@@ -127,13 +129,47 @@ public class CacheFoundActivity extends Activity {
         sharedPrefHelper.setCacheSelection(0);
     }
 
+    @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if(keyCode == KeyEvent.KEYCODE_BACK) {
-            Intent i = new Intent(CacheFoundActivity.this, MainActivity.class);
-            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(i);
+            final DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    switch (which) {
+                        case DialogInterface.BUTTON_POSITIVE: {
+                            break;
+                        }
+                        case DialogInterface.BUTTON_NEGATIVE: {
+                            loadFragment(new MenuFragment());
+                            break;
+                        }
+                    }
+                }
+            };
+            getActivity().runOnUiThread(
+                    new Runnable() {
+                        @Override
+                        public void run() {
+                            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                            builder.setMessage("Are you sure you want to exit?").setNegativeButton("YES", dialogClickListener).setPositiveButton("NO", dialogClickListener).show();
+                        }
+                    }
+            );
             return false;
         }
-        return super.onKeyDown(keyCode, event);
+        return onKeyDown(keyCode,event);
+    }
+
+    @Override
+    public void loadFragment(Fragment fragment) {
+        Intent i = new Intent(getContext(), MainActivity.class);
+        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(i);
+        /*
+        FragmentManager fm = getFragmentManager();
+        android.app.FragmentTransaction fragmentTransaction = fm.beginTransaction();
+        fragmentTransaction.replace(R.id.frameLayout, fragment);
+        fragmentTransaction.commit();
+        ((CacheFoundActivity)getActivity()).setCurrentFragment(fragment);*/
     }
 }

@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">GeocachingApp</string>
     <string name="title_activity_maps">Map</string>
@@ -13,9 +14,9 @@
     <string name="surrender_button_text">GIVE UP</string>
     <string name="ok_button_text">OK!</string>
 
-    <string name="cold_zone_text">You are in the cold zone.</string>
-    <string name="warm_zone_text">You are in the warm zone!</string>
-    <string name="hot_zone_text">You are in the hot zone!!!</string>
+    <string name="cold_zone_text">You are not near any treasure caches.</string>
+    <string name="warm_zone_text">You are near treasure cache %d!</string>
+    <string name="hot_zone_text">You are really close to treasure cache %d!!</string>
 
     <string name="cache_found_text">%s found!</string>
     <string name="cache_not_found_text">%s has not been discovered yet!</string>
@@ -26,7 +27,7 @@
     <string name="timer_text_view">Time taken: %d:%02d</string>
 
     <string name="treasure_found_text">Congratulations! You found treasure cache %d!</string>
-    <string name="wrong_treasure_found_text">Congratulations, you found a wrong treasure cache... Oh bummer!</string>
+    <string name="wrong_treasure_found_text">Oh bummer! You weren\'t looking for this treasure cache.</string>
     <string name="score_text">Your score: %d</string>
 
     <string name="list_score_text">Your score: %d | Time: not set</string>

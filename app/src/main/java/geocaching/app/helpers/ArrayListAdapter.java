@@ -1,4 +1,4 @@
-package geocaching.app;
+package geocaching.app.helpers;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -8,6 +8,9 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import geocaching.app.R;
+import geocaching.app.helpers.SharedPrefHelper;
+
 public class ArrayListAdapter extends ArrayAdapter<String> {
 
     private final Context context;
@@ -15,7 +18,7 @@ public class ArrayListAdapter extends ArrayAdapter<String> {
 
     private SharedPrefHelper sharedPrefHelper;
 
-    ArrayListAdapter(Context context, String[] values) {
+    public ArrayListAdapter(Context context, String[] values) {
         super(context, R.layout.activity_cache_list, values);
         this.context = context;
         this.values = values;
