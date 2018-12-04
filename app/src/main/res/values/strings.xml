@@ -12,6 +12,7 @@
     <string name="map_button_text">MAP</string>
     <string name="settings_button_text">SETTINGS</string>
     <string name="surrender_button_text">GIVE UP</string>
+    <string name="info_button_text">HELP</string>
     <string name="ok_button_text">OK!</string>
 
     <string name="cold_zone_text">You are not near any treasure caches.</string>
@@ -27,7 +28,7 @@
     <string name="timer_text_view">Time taken: %d:%02d</string>
 
     <string name="treasure_found_text">Congratulations! You found treasure cache %d!</string>
-    <string name="wrong_treasure_found_text">Oh bummer! You weren\'t looking for this treasure cache.</string>
+    <string name="wrong_treasure_found_text">Oh bummer! You weren\'t looking for this treasure cache!</string>
     <string name="score_text">Your score: %d</string>
 
     <string name="list_score_text">Your score: %d | Time: not set</string>

@@ -5,7 +5,6 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -17,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.estimote.mustard.rx_goodness.rx_requirements_wizard.Requirement;
@@ -148,6 +148,35 @@ public class GameFragment extends Fragment implements KeyEventListener, Fragment
             }
         });
 
+        final ImageView infoImageView = view.findViewById(R.id.infoImage);
+        infoImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        switch (which) {
+                            case DialogInterface.BUTTON_POSITIVE: {
+                                break;
+                            }
+                            case DialogInterface.BUTTON_NEGATIVE: {
+                                loadFragment(new InfoFragment());
+                                break;
+                            }
+                        }
+                    }};
+                getActivity().runOnUiThread(
+                        new Runnable() {
+                            @Override
+                            public void run() {
+                                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                                builder.setMessage("Are you sure you want to go to the tutorial?").setNegativeButton("YES", dialogClickListener).setPositiveButton("NO", dialogClickListener).show();
+                            }
+                        }
+                );
+            }
+        });
+
         return view;
     }
 
@@ -275,7 +304,7 @@ public class GameFragment extends Fragment implements KeyEventListener, Fragment
                             if (numOfTries == Utils.AMOUNT_OF_TRIES && sharedPrefHelper.getLimiterSetting()) {
                                 builder.setMessage("Are you sure you want to give up the search?").setNegativeButton("YES", dialogClickListener).setPositiveButton("NO", dialogClickListener).show();
                             }else {
-                                builder.setMessage("Are you sure you want to exit?").setNegativeButton("YES", dialogClickListener).setPositiveButton("NO", dialogClickListener).show();
+                                builder.setMessage("Are you sure you want to exit to the menu?").setNegativeButton("YES", dialogClickListener).setPositiveButton("NO", dialogClickListener).show();
                             }
 
                         }

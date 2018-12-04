@@ -92,7 +92,7 @@ public class SettingsFragment extends Fragment implements KeyEventListener, Frag
                             @Override
                             public void run() {
                                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                                builder.setMessage("Are you sure you want to reset your progress? You'll have to find all the found caches again.").setNegativeButton("YES", dialogClickListener).setPositiveButton("NO", dialogClickListener).show();
+                                builder.setMessage("Are you sure you want to reset your progress? You'll have to find all the discovered caches again.").setNegativeButton("YES", dialogClickListener).setPositiveButton("NO", dialogClickListener).show();
                             }
                         }
                 );
