@@ -24,6 +24,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".activities.MainActivity"
+            android:resizeableActivity="false"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -33,10 +34,12 @@
         </activity>
         <activity
             android:name=".activities.CacheListActivity"
+            android:resizeableActivity="false"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".activities.CacheFoundActivity"
             android:launchMode="singleTask"
+            android:resizeableActivity="false"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.nfc.action.NDEF_DISCOVERED" />
@@ -61,8 +64,9 @@
 
         <activity
             android:name=".activities.MapsActivity"
+            android:resizeableActivity="false"
             android:screenOrientation="portrait"
-            android:label="@string/title_activity_maps"></activity>
+            android:label="@string/title_activity_maps" />
     </application>
 
 </manifest>

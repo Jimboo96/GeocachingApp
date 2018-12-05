@@ -248,6 +248,24 @@ public class SharedPrefHelper {
         return sharedPreferences.getBoolean(context.getString(R.string.shared_pref_cache_4_time_set), true);
     }
 
+    public void setCoordinates(float longitude, float latitude) {
+        sharedPreferences.edit().putFloat(context.getString(R.string.shared_pref_longitude), longitude).apply();
+        sharedPreferences.edit().putFloat(context.getString(R.string.shared_pref_latitude), latitude).apply();
+    }
+
+    public void resetCoordinates() {
+        sharedPreferences.edit().putFloat(context.getString(R.string.shared_pref_longitude), 0).apply();
+        sharedPreferences.edit().putFloat(context.getString(R.string.shared_pref_latitude), 0).apply();
+    }
+
+    public float getLongitude() {
+        return sharedPreferences.getFloat(context.getString(R.string.shared_pref_longitude), 0);
+    }
+
+    public float getLatitude() {
+        return sharedPreferences.getFloat(context.getString(R.string.shared_pref_latitude), 0);
+    }
+
     public void resetCaches() {
         sharedPreferences.edit().putBoolean(context.getString(R.string.shared_pref_cache_1_state), false).apply();
         sharedPreferences.edit().putBoolean(context.getString(R.string.shared_pref_cache_2_state), false).apply();
@@ -280,5 +298,8 @@ public class SharedPrefHelper {
         sharedPreferences.edit().putBoolean(context.getString(R.string.shared_pref_cache_4_time_set), false).apply();
 
         sharedPreferences.edit().putInt(context.getString(R.string.shared_pref_cache_nearby), 0).apply();
+
+        sharedPreferences.edit().putFloat(context.getString(R.string.shared_pref_longitude), 0).apply();
+        sharedPreferences.edit().putFloat(context.getString(R.string.shared_pref_latitude), 0).apply();
     }
 }

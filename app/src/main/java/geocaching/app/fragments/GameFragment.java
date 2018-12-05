@@ -27,6 +27,13 @@ import com.estimote.proximity_sdk.api.ProximityObserverBuilder;
 import com.estimote.proximity_sdk.api.ProximityZone;
 import com.estimote.proximity_sdk.api.ProximityZoneBuilder;
 import com.estimote.proximity_sdk.api.ProximityZoneContext;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.List;
 
@@ -40,20 +47,24 @@ import kotlin.Unit;
 import kotlin.jvm.functions.Function0;
 import kotlin.jvm.functions.Function1;
 
-public class GameFragment extends Fragment implements KeyEventListener, FragmentLoader {
+public class GameFragment extends Fragment implements KeyEventListener, FragmentLoader, OnMapReadyCallback {
     private ProximityObserver proximityObserver;
-    private TextView infoText;
-    private TextView triesLeftText;
-    private TextView timerTextView;
-    private TextView amountOfTriesTextView;
-    private String hotnessLVL = "COLD";
-    private SharedPrefHelper sharedPrefHelper;
+    private TextView infoText, triesLeftText, timerTextView, amountOfTriesTextView;
+
+    private String hotnessLVL = Utils.DEFAULT_HOTNESS_LEVEL;
     private int numOfTries = 0;
-    long startTime = 0;
-    Vibrator v;
-    int vibrationMs = 100;
-    int treasureNum = 0;
-    View view;
+    private long startTime = 0;
+    private int treasureNum = 0;
+
+    private SharedPrefHelper sharedPrefHelper;
+
+    private Vibrator v;
+    private View view;
+
+    private MapView mapView;
+    private GoogleMap gmap;
+
+    private static final String MAP_VIEW_BUNDLE_KEY = "MapViewBundleKey";
 
     Handler timerHandler = new Handler();
     Runnable timerRunnable = new Runnable() {
@@ -72,6 +83,102 @@ public class GameFragment extends Fragment implements KeyEventListener, Fragment
     };
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        EstimoteCloudCredentials cloudCredentials =
+                new EstimoteCloudCredentials("my-app-2vi", "8d4cf42cfb254f328f55eeaf051f8b90");
+
+        this.proximityObserver =
+                new ProximityObserverBuilder(getActivity().getApplicationContext(), cloudCredentials)
+                        .onError(new Function1<Throwable, Unit>() {
+                            @Override
+                            public Unit invoke(Throwable throwable) {
+                                Log.e("app", "proximity observer error: " + throwable);
+                                return null;
+                            }
+                        })
+                        .withBalancedPowerMode()
+                        .build();
+
+        RequirementsWizardFactory
+                .createEstimoteRequirementsWizard()
+                .fulfillRequirements(getActivity(),
+                        // onRequirementsFulfilled
+                        new Function0<Unit>() {
+                            @Override
+                            public Unit invoke() {
+                                Log.d("app", "requirements fulfilled");
+                                proximityObserver.startObserving(hotZone);
+                                proximityObserver.startObserving(warmZone);
+                                return null;
+                            }
+                        },
+                        // onRequirementsMissing
+                        new Function1<List<? extends Requirement>, Unit>() {
+                            @Override
+                            public Unit invoke(List<? extends Requirement> requirements) {
+                                Log.e("app", "requirements missing: " + requirements);
+                                return null;
+                            }
+                        },
+                        // onError
+                        new Function1<Throwable, Unit>() {
+                            @Override
+                            public Unit invoke(Throwable throwable) {
+                                Log.e("app", "requirements error: " + throwable);
+                                return null;
+                            }
+                        });
+    }
+
+    ProximityZone warmZone = new ProximityZoneBuilder()
+            .forTag("treasure")
+            .inCustomRange(Utils.CACHE_WARM_ZONE)
+            .onEnter(new Function1<ProximityZoneContext, Unit>() {
+                @Override
+                public Unit invoke(ProximityZoneContext context) {
+                    treasureNum = Integer.parseInt(context.getAttachments().get("treasure"));
+                    hotnessLVL = "WARM";
+                    Log.d("app", "Entered warm zone!");
+                    return null;
+                }
+            })
+            .onExit(new Function1<ProximityZoneContext, Unit>() {
+                @Override
+                public Unit invoke(ProximityZoneContext context) {
+                    treasureNum = Integer.parseInt(context.getAttachments().get("treasure"));
+                    hotnessLVL = "COLD";
+                    Log.d("app", "Exited warm zone!");
+                    return null;
+                }
+            })
+            .build();
+
+    ProximityZone hotZone = new ProximityZoneBuilder()
+            .forTag("treasure")
+            .inCustomRange(Utils.CACHE_HOT_ZONE)
+            .onEnter(new Function1<ProximityZoneContext, Unit>() {
+                @Override
+                public Unit invoke(ProximityZoneContext context) {
+                    treasureNum = Integer.parseInt(context.getAttachments().get("treasure"));
+                    hotnessLVL = "HOT";
+                    Log.d("app", "Entered hot zone!");
+                    return null;
+                }
+            })
+            .onExit(new Function1<ProximityZoneContext, Unit>() {
+                @Override
+                public Unit invoke(ProximityZoneContext context) {
+                    treasureNum = Integer.parseInt(context.getAttachments().get("treasure"));
+                    hotnessLVL = "WARM";
+                    Log.d("app", "Exited hot zone!");
+                    return null;
+                }
+            })
+            .build();
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_game, container, false);
@@ -82,6 +189,15 @@ public class GameFragment extends Fragment implements KeyEventListener, Fragment
 
         v = (Vibrator) getActivity().getSystemService(Context.VIBRATOR_SERVICE);
         checkSettings();
+
+        Bundle mapViewBundle = null;
+        if (savedInstanceState != null) {
+            mapViewBundle = savedInstanceState.getBundle(MAP_VIEW_BUNDLE_KEY);
+        }
+
+        mapView = view.findViewById(R.id.mapView);
+        mapView.onCreate(mapViewBundle);
+        mapView.getMapAsync(this);
 
         infoText = view.findViewById(R.id.textView);
         TextView cacheIDText = view.findViewById(R.id.cacheID);
@@ -181,101 +297,77 @@ public class GameFragment extends Fragment implements KeyEventListener, Fragment
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        EstimoteCloudCredentials cloudCredentials =
-                new EstimoteCloudCredentials("my-app-2vi", "8d4cf42cfb254f328f55eeaf051f8b90");
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
 
-        this.proximityObserver =
-                new ProximityObserverBuilder(getActivity().getApplicationContext(), cloudCredentials)
-                        .onError(new Function1<Throwable, Unit>() {
-                            @Override
-                            public Unit invoke(Throwable throwable) {
-                                Log.e("app", "proximity observer error: " + throwable);
-                                return null;
-                            }
-                        })
-                        .withBalancedPowerMode()
-                        .build();
+        Bundle mapViewBundle = outState.getBundle(MAP_VIEW_BUNDLE_KEY);
+        if (mapViewBundle == null) {
+            mapViewBundle = new Bundle();
+            outState.putBundle(MAP_VIEW_BUNDLE_KEY, mapViewBundle);
+        }
 
-        RequirementsWizardFactory
-                .createEstimoteRequirementsWizard()
-                .fulfillRequirements(getActivity(),
-                        // onRequirementsFulfilled
-                        new Function0<Unit>() {
-                            @Override
-                            public Unit invoke() {
-                                Log.d("app", "requirements fulfilled");
-                                proximityObserver.startObserving(hotZone);
-                                proximityObserver.startObserving(warmZone);
-                                return null;
-                            }
-                        },
-                        // onRequirementsMissing
-                        new Function1<List<? extends Requirement>, Unit>() {
-                            @Override
-                            public Unit invoke(List<? extends Requirement> requirements) {
-                                Log.e("app", "requirements missing: " + requirements);
-                                return null;
-                            }
-                        },
-                        // onError
-                        new Function1<Throwable, Unit>() {
-                            @Override
-                            public Unit invoke(Throwable throwable) {
-                                Log.e("app", "requirements error: " + throwable);
-                                return null;
-                            }
-                        });
+        mapView.onSaveInstanceState(mapViewBundle);
     }
 
-    ProximityZone warmZone = new ProximityZoneBuilder()
-            .forTag("treasure")
-            .inCustomRange(Utils.CACHE_WARM_ZONE)
-            .onEnter(new Function1<ProximityZoneContext, Unit>() {
-                @Override
-                public Unit invoke(ProximityZoneContext context) {
-                    treasureNum = Integer.parseInt(context.getAttachments().get("treasure"));
-                    hotnessLVL = "WARM";
-                    Log.d("app", "Entered warm zone!");
-                    return null;
-                }
-            })
-            .onExit(new Function1<ProximityZoneContext, Unit>() {
-                @Override
-                public Unit invoke(ProximityZoneContext context) {
-                    treasureNum = Integer.parseInt(context.getAttachments().get("treasure"));
-                    hotnessLVL = "COLD";
-                    Log.d("app", "Exited warm zone!");
-                    return null;
-                }
-            })
-            .build();
+    @Override
+    public void onResume() {
+        super.onResume();
+        mapView.onResume();
+    }
 
-    ProximityZone hotZone = new ProximityZoneBuilder()
-            .forTag("treasure")
-            .inCustomRange(Utils.CACHE_HOT_ZONE)
-            .onEnter(new Function1<ProximityZoneContext, Unit>() {
-                @Override
-                public Unit invoke(ProximityZoneContext context) {
-                    treasureNum = Integer.parseInt(context.getAttachments().get("treasure"));
-                    hotnessLVL = "HOT";
-                    Log.d("app", "Entered hot zone!");
-                    return null;
-                }
-            })
-            .onExit(new Function1<ProximityZoneContext, Unit>() {
-                @Override
-                public Unit invoke(ProximityZoneContext context) {
-                    treasureNum = Integer.parseInt(context.getAttachments().get("treasure"));
-                    hotnessLVL = "WARM";
-                    Log.d("app", "Exited hot zone!");
-                    return null;
-                }
-            })
-            .build();
+    @Override
+    public void onStart() {
+        super.onStart();
+        mapView.onStart();
+    }
 
+    @Override
+    public void onStop() {
+        super.onStop();
+        mapView.onStop();
+    }
 
+    @Override
+    public void onPause() {
+        mapView.onPause();
+        super.onPause();
+    }
+
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+        mapView.onLowMemory();
+    }
+
+    @Override
+    public void onDestroy() {
+        mapView.onDestroy();
+        super.onDestroy();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+    }
+
+    @Override
+    public void onDetach() {
+        stopTimer();
+        super.onDetach();
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        gmap = googleMap;
+        gmap.setMinZoomPreference(Utils.ZOOM_LEVEL);
+        float latitude = sharedPrefHelper.getLatitude();
+        float longitude = sharedPrefHelper.getLongitude();
+        LatLng location = new LatLng(latitude, longitude);
+        Marker treasureMarker = gmap.addMarker(new MarkerOptions().position(location).title("Treasure " + sharedPrefHelper.getCacheSelection())
+                .snippet("Directional location of treasure cache " + sharedPrefHelper.getCacheSelection()));
+        treasureMarker.showInfoWindow();
+        gmap.moveCamera(CameraUpdateFactory.newLatLng(location));
+    }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -316,37 +408,6 @@ public class GameFragment extends Fragment implements KeyEventListener, Fragment
     }
 
     @Override
-    public void onPause() {
-        Log.d("lifecycle", "pause");
-        super.onPause();
-    }
-
-    @Override
-    public void onStop() {
-        Log.d("lifecycle", "stop");
-        super.onStop();
-    }
-
-    @Override
-    public void onDestroyView() {
-        Log.d("lifecycle", "onDestroyView");
-        super.onDestroyView();
-    }
-
-    @Override
-    public void onDestroy() {
-        Log.d("lifecycle", "onDestroy");
-        super.onDestroy();
-    }
-
-    @Override
-    public void onDetach() {
-        Log.d("lifecycle", "onDetach");
-        stopTimer();
-        super.onDetach();
-    }
-
-    @Override
     public void loadFragment(Fragment fragment) {
         stopTimer();
         FragmentManager fm = getFragmentManager();
@@ -357,6 +418,7 @@ public class GameFragment extends Fragment implements KeyEventListener, Fragment
     }
 
     private void checkHotness() {
+        int vibrationMs = 100;
         if(hotnessLVL.equals("COLD")) {
             infoText.setText(getResources().getString(R.string.cold_zone_text));
 
@@ -388,7 +450,7 @@ public class GameFragment extends Fragment implements KeyEventListener, Fragment
         }
     }
 
-    protected void checkSettings() {
+    private void checkSettings() {
         if(sharedPrefHelper.getLimiterSetting()) {
             triesLeftText = view.findViewById(R.id.triesLeft);
             triesLeftText.setText(getResources().getString(R.string.tries_left_info, (Utils.AMOUNT_OF_TRIES - numOfTries)));
@@ -413,3 +475,4 @@ public class GameFragment extends Fragment implements KeyEventListener, Fragment
         timerHandler.removeCallbacks(timerRunnable);
     }
 }
+

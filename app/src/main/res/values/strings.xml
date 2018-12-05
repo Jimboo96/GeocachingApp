@@ -4,8 +4,8 @@
     <string name="title_activity_maps">Map</string>
 
     <string name="placeholder_text">Lorem ipsum</string>
-    <string name="check_info_text">Check if you are near a beacon!</string>
-    <string name="cache_ID_text">You are looking for treasure %d.</string>
+    <string name="check_info_text">Check if you are near a treasure cache!</string>
+    <string name="cache_ID_text">Treasure %d</string>
 
     <string name="check_button_text">TRACK</string>
     <string name="play_button_text">PLAY</string>
@@ -78,4 +78,7 @@
     <string name="shared_pref_minutes">SharedPrefMinutes</string>
     <string name="shared_pref_seconds">SharedPrefSeconds</string>
     <string name="shared_pref_number_of_surrenders">SharedPrefNumberOfSurrenders</string>
+
+    <string name="shared_pref_longitude">SharedPrefLongitude</string>
+    <string name="shared_pref_latitude">SharedPrefLatitude</string>
 </resources>

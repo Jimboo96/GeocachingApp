@@ -93,6 +93,7 @@ public class CacheListActivity extends ListActivity {
     }
 
     void startMapsIntent(final int position) {
+        sharedPrefHelper.setCoordinates(longitudeArray.get(position).floatValue(),latitudeArray.get(position).floatValue());
         Intent intent = new Intent(CacheListActivity.this, MapsActivity.class);
         intent.putExtra("id",idArray.get(position));
         intent.putExtra("longitude",longitudeArray.get(position));

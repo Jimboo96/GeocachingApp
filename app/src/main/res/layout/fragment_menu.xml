@@ -10,8 +10,8 @@
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="@dimen/logo_size"
-        android:layout_height="@dimen/logo_size"
+        android:layout_width="@dimen/logo_map_size"
+        android:layout_height="@dimen/logo_map_size"
         android:layout_marginBottom="@dimen/logo_margin"
         android:layout_marginTop="@dimen/logo_margin"
         app:srcCompat="@drawable/placeholder" />
@@ -26,11 +26,11 @@
             android:id="@+id/playButton"
             android:layout_width="@dimen/custom_button_size"
             android:layout_height="@dimen/custom_button_size"
-            android:layout_marginLeft="@dimen/custom_button_margin"
+            android:layout_marginLeft="@dimen/big_padding"
             android:background="@drawable/circle_button_states"
             android:drawableTop="@drawable/sharp_play_circle_filled_black_48"
-            android:paddingTop="@dimen/custom_button_small_padding"
-            android:paddingBottom="@dimen/custom_button_big_padding"
+            android:paddingTop="@dimen/small_padding"
+            android:paddingBottom="@dimen/big_padding"
             android:text="@string/play_button_text"
             android:textSize="@dimen/button_text_size"/>
 
@@ -38,11 +38,11 @@
             android:id="@+id/mapButton"
             android:layout_width="@dimen/custom_button_size"
             android:layout_height="@dimen/custom_button_size"
-            android:layout_marginLeft="@dimen/custom_button_margin"
+            android:layout_marginLeft="@dimen/big_padding"
             android:background="@drawable/circle_button_states"
             android:drawableTop="@drawable/sharp_explore_black_48"
-            android:paddingTop="@dimen/custom_button_small_padding"
-            android:paddingBottom="@dimen/custom_button_big_padding"
+            android:paddingTop="@dimen/small_padding"
+            android:paddingBottom="@dimen/big_padding"
             android:text="@string/map_button_text"
             android:textSize="@dimen/button_text_size"/>
 
@@ -50,11 +50,11 @@
             android:id="@+id/settingsButton"
             android:layout_width="@dimen/custom_button_size"
             android:layout_height="@dimen/custom_button_size"
-            android:layout_marginLeft="@dimen/custom_button_margin"
+            android:layout_marginLeft="@dimen/big_padding"
             android:background="@drawable/circle_button_states"
             android:drawableTop="@drawable/sharp_settings_black_48"
-            android:paddingTop="@dimen/custom_button_small_padding"
-            android:paddingBottom="@dimen/custom_button_big_padding"
+            android:paddingTop="@dimen/small_padding"
+            android:paddingBottom="@dimen/big_padding"
             android:text="@string/settings_button_text"
             android:textSize="@dimen/button_text_size"/>
     </LinearLayout>
