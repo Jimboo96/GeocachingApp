@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import geocaching.app.R;
@@ -23,12 +24,14 @@ public class CacheFoundActivity extends Activity {
         setContentView(R.layout.activity_cache_found);
         sharedPrefHelper = new SharedPrefHelper(this);
 
+        ImageView imageView = findViewById(R.id.cacheFoundImage);
         TextView textView = findViewById(R.id.textView);
         if(sharedPrefHelper.getCacheSelection() == sharedPrefHelper.getCacheNearby()) {
             textView.setText(getResources().getString(R.string.treasure_found_text,sharedPrefHelper.getCacheSelection()));
             setScore();
         } else {
             textView.setText(getResources().getString(R.string.wrong_treasure_found_text));
+            imageView.setImageResource(R.drawable.baseline_thumb_down_black_48);
         }
         sharedPrefHelper.setNearbyCache(0);
 
@@ -41,11 +44,6 @@ public class CacheFoundActivity extends Activity {
                 startActivity(i);
             }
         });
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
     }
 
     private void setScore() {
@@ -61,7 +59,7 @@ public class CacheFoundActivity extends Activity {
         if(sharedPrefHelper.getTimerSetting()) {
             int minutes = sharedPrefHelper.getMinutes();
             int seconds = sharedPrefHelper.getSeconds();
-            baseScore = (int) (Utils.BASE_SCORE * 4.5) -((minutes * 300)+(seconds * 5));
+            baseScore = (int) (Utils.BASE_SCORE * Utils.TIMER_MULTIPLIER) -((minutes * Utils.TIMER_MINUTE_SCORE)+(seconds * Utils.TIMER_SECOND_SCORE));
             if(baseScore > 0) {
                 calculatedScore += baseScore;
             }
@@ -69,13 +67,13 @@ public class CacheFoundActivity extends Activity {
 
         if(sharedPrefHelper.getThirdSetting()) {
             int amountOfTries = sharedPrefHelper.getAmountOfTries();
-            baseScore = (int) (Utils.BASE_SCORE - (amountOfTries*2.75));
+            baseScore = (int) (Utils.BASE_SCORE - (amountOfTries*Utils.TRIES_MULTIPLIER));
             calculatedScore += baseScore;
         }
 
         if(sharedPrefHelper.getNumberOfSurrenders() > 0) {
             int surrenders = sharedPrefHelper.getNumberOfSurrenders();
-            calculatedScore -= surrenders * 500;
+            calculatedScore -= surrenders * Utils.BASE_PENALTY;
             sharedPrefHelper.resetNumberOfSurrenders();
         }
 
