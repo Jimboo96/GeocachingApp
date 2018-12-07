@@ -1,21 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">GeocachingApp</string>
     <string name="title_activity_maps">Map</string>
 
+    <string name="logo_description">This is the app logo shown in MenuFragment</string>
+
     <string name="placeholder_text">Lorem ipsum</string>
-    <string name="check_info_text">Check if you are near a beacon!</string>
-    <string name="cache_ID_text">You are looking for treasure %d.</string>
+    <string name="check_info_text">Check if you are near a treasure cache!</string>
+    <string name="cache_ID_text">Treasure %d</string>
 
     <string name="check_button_text">TRACK</string>
     <string name="play_button_text">PLAY</string>
     <string name="map_button_text">MAP</string>
     <string name="settings_button_text">SETTINGS</string>
     <string name="surrender_button_text">GIVE UP</string>
+    <string name="info_button_text">HELP</string>
     <string name="ok_button_text">OK!</string>
 
-    <string name="cold_zone_text">You are in the cold zone.</string>
-    <string name="warm_zone_text">You are in the warm zone!</string>
-    <string name="hot_zone_text">You are in the hot zone!!!</string>
+    <string name="cold_zone_text">You are not near any treasure caches.</string>
+    <string name="warm_zone_text">You are near treasure cache %d!</string>
+    <string name="hot_zone_text">You are really close to treasure cache %d!!</string>
 
     <string name="cache_found_text">%s found!</string>
     <string name="cache_not_found_text">%s has not been discovered yet!</string>
@@ -26,7 +30,7 @@
     <string name="timer_text_view">Time taken: %d:%02d</string>
 
     <string name="treasure_found_text">Congratulations! You found treasure cache %d!</string>
-    <string name="wrong_treasure_found_text">Congratulations, you found a wrong treasure cache... Oh bummer!</string>
+    <string name="wrong_treasure_found_text">Oh bummer! You weren\'t looking for this treasure cache!</string>
     <string name="score_text">Your score: %d</string>
 
     <string name="list_score_text">Your score: %d | Time: not set</string>
@@ -35,9 +39,19 @@
     <string name="setting1_text">Use timer</string>
     <string name="setting2_text">Use limited tries</string>
     <string name="setting3_text">Show amount of tries</string>
+    <string name="placeholder_name">Bob</string>
+    <string name="placeholder_hint">Write your message here!</string>
+    <string name="name_setting_text">Name and message</string>
 
     <string name="reset_progress_button_text">RESET PROGRESS</string>
     <string name="reset_defaults_button_text">RESET DEFAULT SETTINGS</string>
+
+    <string name="info_screen_text">Tutorial</string>
+    <string name="placeholder_info">Click on a button to get more info!</string>
+    <string name="settings_info">You can adjust your experience from the settings.\nThere you can set timer, limited tries and make your total tries visible.\n\nThe more settings you have on, the more points you will get once you find the cache.</string>
+    <string name="track_info">You can use the track button to update info about the caches that are close to you.\n\nIf you are within 10 or 2 meters from the cache, you\'ll get info depending on how close you are to the cache respectively.\n\nThe intensity of the phone\'s vibration will increase depending on how close to the cache you are.\n\nTo mark the cache as discovered, you\'ll have to use your phone\'s NFC on the cache/beacon.</string>
+    <string name="surrender_info">If you have the limiter setting on, you will have to surrender if you exceed the amount of tries.\n\nYou\'ll get a score penalty if you surrender and the penalty will reset once you find a cache.</string>
+    <string name="list_info">You can choose a treasure cache to search for from MAP-button.\n\nTapping one of the caches in the list will take you to the directive location of the cache shown on Google Maps.\n\nThis location will also be visible while tracking for the cache.\n\nAfter you\'ve found the cache the list will update and show your score and time taken to find the cache if you had the timer setting on.</string>
 
     <string name="shared_pref_key">SharedPrefsFile</string>
     <string name="shared_pref_setting1">SharedPrefsTimerSetting</string>
@@ -76,4 +90,7 @@
     <string name="shared_pref_minutes">SharedPrefMinutes</string>
     <string name="shared_pref_seconds">SharedPrefSeconds</string>
     <string name="shared_pref_number_of_surrenders">SharedPrefNumberOfSurrenders</string>
+
+    <string name="shared_pref_longitude">SharedPrefLongitude</string>
+    <string name="shared_pref_latitude">SharedPrefLatitude</string>
 </resources>

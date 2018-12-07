@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="geocaching.app.fragments.GameFragment"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/cacheID"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/game_header_text_size"
+        android:textAllCaps="true"
+        android:layout_margin="@dimen/medium_padding"
+        android:text="@string/cache_ID_text"/>
+
+    <ImageView
+        android:id="@+id/infoImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/medium_padding"
+        android:layout_alignParentEnd="true"
+        app:srcCompat="@drawable/sharp_help_black_48" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center">
+
+        <com.google.android.gms.maps.MapView
+            android:id="@+id/mapView"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/map_size"
+            android:layout_margin="@dimen/big_padding" />
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/big_padding"
+            android:textSize="@dimen/info_text_size"
+            android:text="@string/check_info_text"/>
+
+        <TextView
+            android:id="@+id/amountOfTriesInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/info_text_size"
+            android:text="@string/amount_info"
+            android:visibility="gone"/>
+
+        <TextView
+            android:id="@+id/triesLeft"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/info_text_size"
+            android:text="@string/tries_left_info"
+            android:visibility="gone"/>
+
+        <TextView
+            android:id="@+id/timerTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/big_padding"
+            android:textSize="@dimen/info_text_size"
+            android:text="@string/timer_text_view"
+            android:visibility="gone"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/checkButton"
+                android:layout_width="@dimen/custom_button_size"
+                android:layout_height="@dimen/custom_button_size"
+                android:background="@drawable/circle_button_states"
+                android:drawableTop="@drawable/baseline_my_location_black_48"
+                android:paddingTop="@dimen/small_padding"
+                android:paddingBottom="@dimen/big_padding"
+                android:text="@string/check_button_text"
+                android:textSize="@dimen/button_text_size"
+                android:layout_margin="@dimen/small_padding"/>
+
+            <Button
+                android:id="@+id/surrenderButton"
+                android:layout_width="@dimen/custom_button_size"
+                android:layout_height="@dimen/custom_button_size"
+                android:background="@drawable/circle"
+                android:drawableTop="@drawable/baseline_outlined_flag_black_48"
+                android:paddingTop="@dimen/small_padding"
+                android:paddingBottom="@dimen/big_padding"
+                android:text="@string/surrender_button_text"
+                android:textSize="@dimen/button_text_size"
+                android:layout_margin="@dimen/small_padding"
+                android:visibility="gone"/>
+
+        </LinearLayout>
+    </LinearLayout>
+</RelativeLayout>
