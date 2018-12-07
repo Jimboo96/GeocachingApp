@@ -25,11 +25,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
 
-        ID = getIntent().getIntExtra("id",0);
-        ID += 1; // Just making it more clear from users POV to start from 1 and not 0.
+        ID = getIntent().getIntExtra("id",0) + 1;
         longitude = getIntent().getDoubleExtra("longitude",0);
         latitude = getIntent().getDoubleExtra("latitude",0);
-        //Toast.makeText(this, "id: " + ID + " long: " + longitude + " lat: " + latitude, Toast.LENGTH_LONG).show();
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -49,8 +47,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      */
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        GoogleMap mMap;
-        mMap = googleMap;
+        GoogleMap mMap = googleMap;
 
         LatLng cacheCoordinates = new LatLng(latitude, longitude);
         Marker treasureMarker = mMap.addMarker(new MarkerOptions().position(cacheCoordinates).title("Treasure " + ID).snippet("Directional location of treasure cache " + ID));

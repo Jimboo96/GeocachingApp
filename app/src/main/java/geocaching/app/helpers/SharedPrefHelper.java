@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import geocaching.app.R;
-import geocaching.app.helpers.Utils;
 
 public class SharedPrefHelper {
     private SharedPreferences sharedPreferences;

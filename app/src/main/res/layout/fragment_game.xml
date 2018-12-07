@@ -13,14 +13,14 @@
         android:layout_height="wrap_content"
         android:textSize="@dimen/game_header_text_size"
         android:textAllCaps="true"
-        android:layout_margin="10dp"
+        android:layout_margin="@dimen/medium_padding"
         android:text="@string/cache_ID_text"/>
 
     <ImageView
         android:id="@+id/infoImage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
+        android:layout_margin="@dimen/medium_padding"
         android:layout_alignParentEnd="true"
         app:srcCompat="@drawable/sharp_help_black_48" />
 
@@ -33,7 +33,7 @@
         <com.google.android.gms.maps.MapView
             android:id="@+id/mapView"
             android:layout_width="match_parent"
-            android:layout_height="280dp"
+            android:layout_height="@dimen/map_size"
             android:layout_margin="@dimen/big_padding" />
 
         <TextView
@@ -84,7 +84,7 @@
                 android:paddingBottom="@dimen/big_padding"
                 android:text="@string/check_button_text"
                 android:textSize="@dimen/button_text_size"
-                android:layout_margin="5dp"/>
+                android:layout_margin="@dimen/small_padding"/>
 
             <Button
                 android:id="@+id/surrenderButton"
@@ -96,7 +96,7 @@
                 android:paddingBottom="@dimen/big_padding"
                 android:text="@string/surrender_button_text"
                 android:textSize="@dimen/button_text_size"
-                android:layout_margin="5dp"
+                android:layout_margin="@dimen/small_padding"
                 android:visibility="gone"/>
 
         </LinearLayout>

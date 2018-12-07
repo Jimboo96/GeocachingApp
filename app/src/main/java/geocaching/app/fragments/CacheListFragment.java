@@ -2,14 +2,14 @@ package geocaching.app.fragments;
 
 import android.app.AlertDialog;
 import android.app.Fragment;
-import android.app.ProgressDialog;
+import android.app.FragmentManager;
+import android.app.ListFragment;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.view.LayoutInflater;
+import android.view.KeyEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -26,37 +26,35 @@ import java.net.URL;
 import java.util.ArrayList;
 
 import geocaching.app.R;
+import geocaching.app.activities.MainActivity;
 import geocaching.app.activities.MapsActivity;
 import geocaching.app.helpers.ArrayListAdapter;
 import geocaching.app.helpers.SharedPrefHelper;
+import geocaching.app.interfaces.FragmentLoader;
+import geocaching.app.interfaces.KeyEventListener;
 
-public class CacheListFragment extends Fragment {
-    private ProgressDialog pd;
+public class CacheListFragment extends ListFragment implements KeyEventListener, FragmentLoader {
     private JSONObject jObject;
-    View view;
-
-    protected ArrayList<Integer> idArray = new ArrayList<>();
-    protected ArrayList<Boolean> completedArray = new ArrayList<>();
-    protected ArrayList<Double> longitudeArray = new ArrayList<>();
-    protected ArrayList<Double> latitudeArray = new ArrayList<>();
-    protected String[] values;
-
+    private ArrayList<Integer> idArray;
+    private ArrayList<Double> longitudeArray;
+    private ArrayList<Double> latitudeArray;
     private SharedPrefHelper sharedPrefHelper;
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_settings, container, false);
-        return view;
+    public CacheListFragment(){
+        idArray = new ArrayList<>();
+        latitudeArray = new ArrayList<>();
+        longitudeArray = new ArrayList<>();
     }
 
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         sharedPrefHelper = new SharedPrefHelper(getContext());
         new JsonTask().execute("http://www.students.oamk.fi/~t6bjji00/json_files/coordinates.json");
     }
 
-    protected void onListItemClick(ListView l, View v, final int position, final long id) {
+    @Override
+    public void onListItemClick(ListView l, View v, final int position, final long id) {
         if(sharedPrefHelper.getCacheSelection() == 0) {
             sharedPrefHelper.setCacheSelection((int) id + 1);
             Toast.makeText(getContext(), "Treasure " + (id+1) + " selected!", Toast.LENGTH_LONG).show();
@@ -92,7 +90,26 @@ public class CacheListFragment extends Fragment {
         }
     }
 
-    void startMapsIntent(final int position) {
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if(keyCode == KeyEvent.KEYCODE_BACK) {
+            loadFragment(new MenuFragment());
+            return false;
+        }
+        return onKeyDown(keyCode,event);
+    }
+
+    @Override
+    public void loadFragment(Fragment fragment) {
+        FragmentManager fm = getFragmentManager();
+        android.app.FragmentTransaction fragmentTransaction = fm.beginTransaction();
+        fragmentTransaction.replace(R.id.frameLayout, fragment);
+        fragmentTransaction.commit();
+        ((MainActivity)getActivity()).setCurrentFragment(fragment);
+    }
+
+    private void startMapsIntent(final int position) {
+        sharedPrefHelper.setCoordinates(longitudeArray.get(position).floatValue(),latitudeArray.get(position).floatValue());
         Intent intent = new Intent(getContext(), MapsActivity.class);
         intent.putExtra("id",idArray.get(position));
         intent.putExtra("longitude",longitudeArray.get(position));
@@ -100,21 +117,21 @@ public class CacheListFragment extends Fragment {
         startActivity(intent);
     }
 
-    void parseJSON() {
+    private void parseJSON() {
         JSONObject treasures, treasure;
+        String[] values;
         try {
             treasures = jObject.getJSONObject("treasures");
             values  = new String[treasures.length()];
             for (int i = 0;i<treasures.length();i++) {
                 treasure = treasures.getJSONObject("treasure" + i);
                 idArray.add(treasure.getInt("id"));
-                completedArray.add(treasure.getBoolean("completed"));
                 longitudeArray.add(treasure.getDouble("longitude"));
                 latitudeArray.add(treasure.getDouble("latitude"));
                 values[i] = "Treasure " + (i + 1);
             }
             ArrayListAdapter adapter = new ArrayListAdapter(getContext(), values);
-            //setListAdapter(adapter);
+            setListAdapter(adapter);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -124,17 +141,11 @@ public class CacheListFragment extends Fragment {
 
         protected void onPreExecute() {
             super.onPreExecute();
-
-            pd = new ProgressDialog(getContext());
-            pd.setMessage("Loading cache locations...");
-            pd.setCancelable(false);
-            pd.show();
         }
 
         protected String doInBackground(String... params) {
             HttpURLConnection connection = null;
             BufferedReader reader = null;
-
             try {
                 URL url = new URL(params[0]);
                 connection = (HttpURLConnection) url.openConnection();
@@ -150,9 +161,7 @@ public class CacheListFragment extends Fragment {
                 while ((line = reader.readLine()) != null) {
                     buffer.append(line+"\n");
                 }
-
                 return buffer.toString();
-
 
             } catch (MalformedURLException e) {
                 e.printStackTrace();
@@ -176,10 +185,6 @@ public class CacheListFragment extends Fragment {
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
-            if (pd.isShowing()){
-                pd.dismiss();
-            }
-
             try {
                 jObject = new JSONObject(result);
                 parseJSON();

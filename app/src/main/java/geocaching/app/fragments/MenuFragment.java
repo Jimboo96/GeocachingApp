@@ -5,9 +5,9 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,10 +20,7 @@ import com.google.android.gms.common.GoogleApiAvailability;
 import java.net.InetAddress;
 
 import geocaching.app.R;
-import geocaching.app.activities.CacheListActivity;
 import geocaching.app.activities.MainActivity;
-import geocaching.app.fragments.GameFragment;
-import geocaching.app.fragments.SettingsFragment;
 import geocaching.app.helpers.SharedPrefHelper;
 import geocaching.app.helpers.Utils;
 import geocaching.app.interfaces.FragmentLoader;
@@ -61,8 +58,7 @@ public class MenuFragment extends Fragment implements KeyEventListener, Fragment
             @Override
             public void onClick(View v) {
                 if(isNetworkConnected()) {
-                    Intent intent = new Intent(getContext(), CacheListActivity.class);
-                    startActivity(intent);
+                    loadFragment(new CacheListFragment());
                 } else {
                     Toast.makeText(getContext(), "You need an Internet connection!", Toast.LENGTH_LONG).show();
                 }
@@ -84,7 +80,7 @@ public class MenuFragment extends Fragment implements KeyEventListener, Fragment
         super.onResume();
         int result = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(getContext());
         if(result == SUCCESS) {
-            //Connection OK
+            Log.d("GoogleApiAvailability", "Connection OK!");
         }else if (result == SERVICE_MISSING || result == SERVICE_VERSION_UPDATE_REQUIRED || result == SERVICE_DISABLED) {
             GoogleApiAvailability.getInstance().getErrorDialog(getActivity(),result,result);
         }

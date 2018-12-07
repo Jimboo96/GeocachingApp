@@ -60,9 +60,7 @@ public class GameFragment extends Fragment implements KeyEventListener, Fragment
 
     private Vibrator v;
     private View view;
-
     private MapView mapView;
-    private GoogleMap gmap;
 
     private static final String MAP_VIEW_BUNDLE_KEY = "MapViewBundleKey";
 
@@ -358,14 +356,14 @@ public class GameFragment extends Fragment implements KeyEventListener, Fragment
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        gmap = googleMap;
+        GoogleMap gmap = googleMap;
         gmap.setMinZoomPreference(Utils.ZOOM_LEVEL);
-        float latitude = sharedPrefHelper.getLatitude();
-        float longitude = sharedPrefHelper.getLongitude();
-        LatLng location = new LatLng(latitude, longitude);
+
+        LatLng location = new LatLng(sharedPrefHelper.getLatitude(), sharedPrefHelper.getLongitude());
         Marker treasureMarker = gmap.addMarker(new MarkerOptions().position(location).title("Treasure " + sharedPrefHelper.getCacheSelection())
                 .snippet("Directional location of treasure cache " + sharedPrefHelper.getCacheSelection()));
         treasureMarker.showInfoWindow();
+
         gmap.moveCamera(CameraUpdateFactory.newLatLng(location));
     }
 
@@ -418,35 +416,29 @@ public class GameFragment extends Fragment implements KeyEventListener, Fragment
     }
 
     private void checkHotness() {
-        int vibrationMs = 100;
-        if(hotnessLVL.equals("COLD")) {
-            infoText.setText(getResources().getString(R.string.cold_zone_text));
+        switch (hotnessLVL) {
+            case "COLD":
+                infoText.setText(getResources().getString(R.string.cold_zone_text));
+                vibrate(0.5f);
+                break;
+            case "WARM":
+                sharedPrefHelper.setNearbyCache(treasureNum);
+                infoText.setText(getResources().getString(R.string.warm_zone_text, treasureNum));
+                vibrate(1);
+                break;
+            case "HOT":
+                sharedPrefHelper.setNearbyCache(treasureNum);
+                infoText.setText(getResources().getString(R.string.hot_zone_text, treasureNum));
+                vibrate(2);
+                break;
+        }
+    }
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                v.vibrate(VibrationEffect.createOneShot(vibrationMs / 2, VibrationEffect.DEFAULT_AMPLITUDE));
-            } else {
-                v.vibrate(vibrationMs / 2);
-            }
-
-        } else if (hotnessLVL.equals("WARM")) {
-            sharedPrefHelper.setNearbyCache(treasureNum);
-            infoText.setText(getResources().getString(R.string.warm_zone_text, treasureNum));
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                v.vibrate(VibrationEffect.createOneShot(vibrationMs, VibrationEffect.DEFAULT_AMPLITUDE));
-            } else {
-                v.vibrate(vibrationMs);
-            }
-
-        } else if (hotnessLVL.equals("HOT")) {
-            sharedPrefHelper.setNearbyCache(treasureNum);
-            infoText.setText(getResources().getString(R.string.hot_zone_text, treasureNum));
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                v.vibrate(VibrationEffect.createOneShot(vibrationMs * 2, VibrationEffect.DEFAULT_AMPLITUDE));
-            } else {
-                v.vibrate(vibrationMs * 2);
-            }
+    private void vibrate(float intensity) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            v.vibrate(VibrationEffect.createOneShot((int)(Utils.DEFAULT_VIBRATION_TIME * intensity), VibrationEffect.DEFAULT_AMPLITUDE));
+        } else {
+            v.vibrate((int) (Utils.DEFAULT_VIBRATION_TIME * intensity));
         }
     }
 

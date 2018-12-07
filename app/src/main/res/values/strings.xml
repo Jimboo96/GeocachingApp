@@ -3,6 +3,8 @@
     <string name="app_name">GeocachingApp</string>
     <string name="title_activity_maps">Map</string>
 
+    <string name="logo_description">This is the app logo shown in MenuFragment</string>
+
     <string name="placeholder_text">Lorem ipsum</string>
     <string name="check_info_text">Check if you are near a treasure cache!</string>
     <string name="cache_ID_text">Treasure %d</string>
@@ -37,6 +39,9 @@
     <string name="setting1_text">Use timer</string>
     <string name="setting2_text">Use limited tries</string>
     <string name="setting3_text">Show amount of tries</string>
+    <string name="placeholder_name">Bob</string>
+    <string name="placeholder_hint">Write your message here!</string>
+    <string name="name_setting_text">Name and message</string>
 
     <string name="reset_progress_button_text">RESET PROGRESS</string>
     <string name="reset_defaults_button_text">RESET DEFAULT SETTINGS</string>
