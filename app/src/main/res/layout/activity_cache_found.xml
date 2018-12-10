@@ -39,4 +39,12 @@
         android:layout_height="wrap_content"
         android:textSize="@dimen/info_text_size"
         android:text="@string/ok_button_text" />
+
+    <FrameLayout
+        android:padding="@dimen/big_padding"
+        android:id="@+id/frameLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    </FrameLayout>
 </LinearLayout>

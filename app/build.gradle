@@ -28,4 +28,5 @@ dependencies {
     implementation 'com.estimote:proximity-sdk:1.0.3'
     implementation 'com.estimote:mustard:0.2.1'
     implementation 'com.google.android.gms:play-services-maps:16.0.0'
+    implementation 'com.estimote:sdk:0.16.0@aar'
 }

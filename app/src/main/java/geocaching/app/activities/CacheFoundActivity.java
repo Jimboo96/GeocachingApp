@@ -2,6 +2,7 @@ package geocaching.app.activities;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.FragmentManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import geocaching.app.R;
+import geocaching.app.fragments.GuestBookFragment;
 import geocaching.app.helpers.SharedPrefHelper;
 import geocaching.app.helpers.Utils;
 
@@ -23,6 +25,8 @@ public class CacheFoundActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cache_found);
         sharedPrefHelper = new SharedPrefHelper(this);
+
+        setGuestBook();
 
         ImageView imageView = findViewById(R.id.cacheFoundImage);
         TextView textView = findViewById(R.id.textView);
@@ -155,5 +159,12 @@ public class CacheFoundActivity extends Activity {
             return false;
         }
         return super.onKeyDown(keyCode,event);
+    }
+
+    private void setGuestBook() {
+        FragmentManager fm = getFragmentManager();
+        android.app.FragmentTransaction fragmentTransaction = fm.beginTransaction();
+        fragmentTransaction.replace(R.id.frameLayout, new GuestBookFragment());
+        fragmentTransaction.commit();
     }
 }
