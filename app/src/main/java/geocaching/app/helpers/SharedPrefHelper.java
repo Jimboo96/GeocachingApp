@@ -265,6 +265,14 @@ public class SharedPrefHelper {
         return sharedPreferences.getFloat(context.getString(R.string.shared_pref_latitude), 0);
     }
 
+    public void setGuestBookText(String guestBookText) {
+        sharedPreferences.edit().putString(context.getString(R.string.shared_pref_guest_book), guestBookText).apply();
+    }
+
+    public String getGuestBookText() {
+        return sharedPreferences.getString(context.getString(R.string.shared_pref_guest_book), "");
+    }
+
     public void resetCaches() {
         sharedPreferences.edit().putBoolean(context.getString(R.string.shared_pref_cache_1_state), false).apply();
         sharedPreferences.edit().putBoolean(context.getString(R.string.shared_pref_cache_2_state), false).apply();

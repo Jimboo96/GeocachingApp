@@ -26,7 +26,6 @@ import java.util.Map;
 import geocaching.app.R;
 
 public class ConfigureBeaconActivity extends AppCompatActivity {
-
     private static final String TAG = "Beacon config";
 
     private ConfigurableDevice configurableDevice;

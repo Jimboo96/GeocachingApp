@@ -5,12 +5,18 @@ import android.app.AlertDialog;
 import android.app.FragmentManager;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.nfc.NdefMessage;
+import android.nfc.NdefRecord;
+import android.nfc.NfcAdapter;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.estimote.sdk.connection.settings.Nfc;
 
 import geocaching.app.R;
 import geocaching.app.fragments.GuestBookFragment;
@@ -26,13 +32,12 @@ public class CacheFoundActivity extends Activity {
         setContentView(R.layout.activity_cache_found);
         sharedPrefHelper = new SharedPrefHelper(this);
 
-        setGuestBook();
-
         ImageView imageView = findViewById(R.id.cacheFoundImage);
         TextView textView = findViewById(R.id.textView);
         if(sharedPrefHelper.getCacheSelection() == sharedPrefHelper.getCacheNearby()) {
             textView.setText(getResources().getString(R.string.treasure_found_text,sharedPrefHelper.getCacheSelection()));
             setScore();
+            setupGuestBook();
         } else {
             textView.setText(getResources().getString(R.string.wrong_treasure_found_text));
             imageView.setImageResource(R.drawable.baseline_thumb_down_black_48);
@@ -161,7 +166,7 @@ public class CacheFoundActivity extends Activity {
         return super.onKeyDown(keyCode,event);
     }
 
-    private void setGuestBook() {
+    private void setupGuestBook() {
         FragmentManager fm = getFragmentManager();
         android.app.FragmentTransaction fragmentTransaction = fm.beginTransaction();
         fragmentTransaction.replace(R.id.frameLayout, new GuestBookFragment());

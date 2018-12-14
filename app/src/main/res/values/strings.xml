@@ -46,6 +46,8 @@
     <string name="reset_progress_button_text">RESET PROGRESS</string>
     <string name="reset_defaults_button_text">RESET DEFAULT SETTINGS</string>
 
+    <string name="guest_book_text">Latest guest book message: %s</string>
+
     <string name="info_screen_text">Tutorial</string>
     <string name="placeholder_info">Click on a button to get more info!</string>
     <string name="settings_info">You can adjust your experience from the settings.\nThere you can set timer, limited tries and make your total tries visible.\n\nThe more settings you have on, the more points you will get once you find the cache.</string>
@@ -93,4 +95,6 @@
 
     <string name="shared_pref_longitude">SharedPrefLongitude</string>
     <string name="shared_pref_latitude">SharedPrefLatitude</string>
+
+    <string name="shared_pref_guest_book">SharedPrefGuestBook</string>
 </resources>
