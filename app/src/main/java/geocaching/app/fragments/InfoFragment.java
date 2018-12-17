@@ -22,6 +22,7 @@ public class InfoFragment extends Fragment implements KeyEventListener, Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_info, container, false);
+
         final TextView infoTextView = view.findViewById(R.id.infoText);
 
         Button infoButton1 = view.findViewById(R.id.info1);

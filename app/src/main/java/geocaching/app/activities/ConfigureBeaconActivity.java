@@ -28,19 +28,22 @@ import geocaching.app.R;
 public class ConfigureBeaconActivity extends AppCompatActivity {
     private static final String TAG = "Beacon config";
 
+    private ConfigurableDevicesScanner devicesScanner;
     private ConfigurableDevice configurableDevice;
     private DeviceConnection connection;
     private DeviceConnectionProvider connectionProvider;
+
     private TextView beaconIDData,beaconData,beaconVersion;
     private EditText beaconIDEdit;
     private Button deleteButton, resetButton, beaconIDEditSave;
     private ToggleButton gameToggle;
+
     String beaconVersionStr = "";
     String beaconIdStr = "";
     int beaconVersionInt = 0;
+
     Map<String, String> beaconDataMap = new LinkedHashMap<>();
     List<String> availableBeacons = new ArrayList<String>();
-    private ConfigurableDevicesScanner devicesScanner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

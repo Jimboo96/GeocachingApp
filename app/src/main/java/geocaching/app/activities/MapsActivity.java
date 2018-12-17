@@ -47,12 +47,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      */
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        GoogleMap mMap = googleMap;
+        GoogleMap gMap = googleMap;
 
         LatLng cacheCoordinates = new LatLng(latitude, longitude);
-        Marker treasureMarker = mMap.addMarker(new MarkerOptions().position(cacheCoordinates).title("Treasure " + ID).snippet("Directional location of treasure cache " + ID));
+        Marker treasureMarker = gMap.addMarker(new MarkerOptions().position(cacheCoordinates).title("Treasure " + ID).snippet("Directional location of treasure cache " + ID));
         treasureMarker.showInfoWindow();
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(cacheCoordinates));
+        gMap.moveCamera(CameraUpdateFactory.newLatLng(cacheCoordinates));
     }
 
     public boolean onKeyDown(int keyCode, KeyEvent event) {

@@ -12,6 +12,7 @@ public class Utils {
     public final static int BASE_PENALTY = 500;
     public final static int TIMER_MINUTE_SCORE = 300;
     public final static int TIMER_SECOND_SCORE = 5;
+
     public final static double TIMER_MULTIPLIER = 4.5;
     public final static double TRIES_MULTIPLIER = 2.75;
 

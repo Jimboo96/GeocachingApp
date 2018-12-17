@@ -138,7 +138,6 @@ public class CacheListFragment extends ListFragment implements KeyEventListener,
     }
 
     private class JsonTask extends AsyncTask<String, String, String> {
-
         protected void onPreExecute() {
             super.onPreExecute();
         }

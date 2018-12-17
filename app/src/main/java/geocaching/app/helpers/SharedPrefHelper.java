@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import geocaching.app.R;
 
 public class SharedPrefHelper {
+    // Currently there is lot of data stored in SharedPreferences for demo purposes, so database was not set up.
     private SharedPreferences sharedPreferences;
     private Context context;
 

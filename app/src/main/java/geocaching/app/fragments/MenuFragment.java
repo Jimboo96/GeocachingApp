@@ -39,6 +39,7 @@ public class MenuFragment extends Fragment implements KeyEventListener, Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_menu, container, false);
+
         sharedPrefHelper = new SharedPrefHelper(getContext());
 
         final Button playButton = view.findViewById(R.id.playButton);

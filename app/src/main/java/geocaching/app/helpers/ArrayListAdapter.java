@@ -20,6 +20,7 @@ public class ArrayListAdapter extends ArrayAdapter<String> {
         super(context, R.layout.fragment_cache_list, values);
         this.context = context;
         this.values = values;
+
         sharedPrefHelper = new SharedPrefHelper(context);
     }
 

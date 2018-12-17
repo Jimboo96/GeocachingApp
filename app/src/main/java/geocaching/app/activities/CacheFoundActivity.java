@@ -30,6 +30,7 @@ public class CacheFoundActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cache_found);
+
         sharedPrefHelper = new SharedPrefHelper(this);
 
         ImageView imageView = findViewById(R.id.cacheFoundImage);

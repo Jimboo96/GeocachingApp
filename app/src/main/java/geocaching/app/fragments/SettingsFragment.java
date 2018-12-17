@@ -28,6 +28,7 @@ public class SettingsFragment extends Fragment implements KeyEventListener, Frag
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_settings, container, false);
+
         switch1 = view.findViewById(R.id.switch1);
         switch2 = view.findViewById(R.id.switch2);
         switch3 = view.findViewById(R.id.switch3);

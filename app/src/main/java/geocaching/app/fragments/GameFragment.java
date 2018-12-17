@@ -52,6 +52,7 @@ public class GameFragment extends Fragment implements KeyEventListener, Fragment
     private TextView infoText, triesLeftText, timerTextView, amountOfTriesTextView;
 
     private String hotnessLVL = Utils.DEFAULT_HOTNESS_LEVEL;
+
     private int numOfTries = 0;
     private long startTime = 0;
     private int treasureNum = 0;
