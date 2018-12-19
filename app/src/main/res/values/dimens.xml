@@ -2,7 +2,7 @@
 <resources>
     <dimen name="logo_margin">50dp</dimen>
     <dimen name="logo_size">250dp</dimen>
-    <dimen name="map_size">280dp</dimen>
+    <dimen name="map_size">260dp</dimen>
 
     <dimen name="custom_button_size">82dp</dimen>
     <dimen name="info_button_size">64dp</dimen>

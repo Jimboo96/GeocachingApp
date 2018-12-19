@@ -5,8 +5,8 @@ public class Utils {
     public final static int AMOUNT_OF_TRIES = 25;
 
     public final static String DEFAULT_HOTNESS_LEVEL = "COLD";
-    public final static double CACHE_HOT_ZONE = 2.0;
-    public final static double CACHE_WARM_ZONE = 10.0;
+    public final static double CACHE_HOT_ZONE = 1.5;
+    public final static double CACHE_WARM_ZONE = 4.0;
 
     public final static int BASE_SCORE = 1000;
     public final static int BASE_PENALTY = 500;
